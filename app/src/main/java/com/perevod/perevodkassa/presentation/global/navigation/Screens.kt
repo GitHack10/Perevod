@@ -1,7 +1,6 @@
 package com.perevod.perevodkassa.presentation.global.navigation
 
 import com.github.terrakok.cicerone.androidx.FragmentScreen
-import com.perevod.perevodkassa.presentation.screens.auth.AuthFragment
 import com.perevod.perevodkassa.presentation.screens.home.HomeFragment
 
 /**
@@ -9,6 +8,5 @@ import com.perevod.perevodkassa.presentation.screens.home.HomeFragment
  */
 object Screens {
 
-    fun authScreen() = FragmentScreen { AuthFragment() }
     fun homeScreen() = FragmentScreen { HomeFragment() }
 }

@@ -4,11 +4,74 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
     android:background="@color/white">
 
     <include
         android:id="@+id/homeToolbar"
         layout="@layout/toolbar_home" />
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="32dp"
+        android:layout_marginTop="84dp"
+        android:gravity="center"
+        android:text="@string/home_screen_title"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_size_32"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/homeToolbar"
+        app:layout_constraintWidth_max="@dimen/one_column_tablet_width" />
+
+    <TextView
+        android:id="@+id/tvAmount"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="32dp"
+        android:layout_marginTop="32dp"
+        android:gravity="center"
+        android:maxLines="1"
+        android:text="@string/home_screen_input_hint"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_size_64"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvTitle"
+        app:layout_constraintWidth_max="@dimen/one_column_tablet_width" />
+
+    <EditText
+        android:id="@+id/etAmount"
+        android:layout_width="1dp"
+        android:layout_height="0dp"
+        android:background="@null"
+        android:cursorVisible="false"
+        android:digits="0123456789"
+        android:gravity="center"
+        android:hint="@string/home_screen_input_hint"
+        android:inputType="number"
+        android:maxLines="1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnDone"
+        style="@style/PrimaryButtonStyle"
+        android:layout_width="0dp"
+        android:layout_height="71dp"
+        android:layout_marginHorizontal="32dp"
+        android:layout_marginVertical="24dp"
+        android:text="@string/home_screen_btn_done"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        app:backgroundTint="@color/grey_BAB9B9"
+        app:cornerRadius="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintWidth_max="@dimen/one_column_tablet_width" />
 
     <FrameLayout
         android:id="@+id/vLoading"

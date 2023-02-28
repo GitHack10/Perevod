@@ -2,9 +2,15 @@ package com.perevod.perevodkassa.presentation.global.extensions
 
 import android.graphics.drawable.Drawable
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.annotation.Px
 import androidx.appcompat.widget.AppCompatEditText
+import androidx.core.view.marginBottom
+import androidx.core.view.marginLeft
+import androidx.core.view.marginRight
+import androidx.core.view.marginTop
 import com.perevod.perevodkassa.utils.ClickListenerWrapper
 
 /**
@@ -76,3 +82,16 @@ fun AppCompatEditText.text() = text.toString()
 fun AppCompatEditText.clearText() = setText("")
 fun AppCompatEditText.isNotEmpty() = text.toString().isNotEmpty()
 fun AppCompatEditText.isEmpty() = text.toString().isEmpty()
+
+fun View.updateMargins(
+    @Px top: Int = marginTop,
+    @Px bottom: Int = marginBottom,
+    @Px left: Int = marginLeft,
+    @Px right: Int = marginRight
+) {
+    layoutParams = (layoutParams as? ViewGroup.MarginLayoutParams)?.apply {
+        setMargins(
+            left, top, right, bottom
+        )
+    }
+}

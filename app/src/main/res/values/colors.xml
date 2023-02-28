@@ -11,6 +11,7 @@
     <color name="colorPrimary">#FFFFFF</color>
     <color name="colorPrimaryDark">#009966</color>
     <color name="colorAccent">#009966</color>
+    <color name="electric_violet">#7452FE</color>
     <color name="dark_grey">#4A4A4A</color>
     <color name="light_grey">#F4F4F4</color>
     <color name="light_red">#FFD1D1</color>
@@ -18,6 +19,7 @@
     <color name="grey_ECECEC">#ECECEC</color>
     <color name="grey_6B6B6B">#6B6B6B</color>
     <color name="grey_7B7B7B">#7B7B7B</color>
+    <color name="grey_BAB9B9">#BAB9B9</color>
 
     <color name="black_60">#99000000</color>
     <color name="opacity_white_50">#80FFFFFF</color>

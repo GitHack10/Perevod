@@ -2,14 +2,14 @@ package com.perevod.perevodkassa.presentation.screens.home
 
 import android.app.Dialog
 import android.content.ComponentName
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.ServiceConnection
+import android.content.res.ColorStateList
 import android.os.IBinder
 import android.os.RemoteException
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.lifecycleScope
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.textview.MaterialTextView
@@ -20,7 +20,6 @@ import com.perevod.perevodkassa.presentation.global.BaseFragment
 import com.perevod.perevodkassa.presentation.global.extensions.launchWhenStarted
 import com.perevod.perevodkassa.presentation.global.extensions.onDelayedClick
 import com.perevod.perevodkassa.utils.DebouncingQueryTextListener
-import com.perevod.perevodkassa.utils.createCircleRippleDrawable
 import com.perevod.perevodkassa.utils.resColor
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.onEach
@@ -41,6 +40,7 @@ class HomeFragment : BaseFragment(R.layout.screen_home) {
     private var fptrServiceBinder: IFptrService? = null
 
     private val serviceConnection: ServiceConnection = object : ServiceConnection {
+
         override fun onServiceDisconnected(name: ComponentName) {
             fptrServiceBinder = null
         }
@@ -51,17 +51,14 @@ class HomeFragment : BaseFragment(R.layout.screen_home) {
     }
 
     override fun prepareUi() {
-        with(viewBinding) {
-            initService()
-            initSuccessDialog()
-            initErrorDialog()
-            hideKeyboard()
-            homeToolbar.ivStaffClose.background = createCircleRippleDrawable(
-                resColor(R.color.ripple_primary)
-            )
-            homeToolbar.ivStaffClose.onDelayedClick {
-                showCloseStaffDialog()
-            }
+        initService()
+        initSuccessDialog()
+        initErrorDialog()
+        initInputAmount()
+        viewBinding.etAmount.requestFocus()
+        showKeyboard()
+        viewBinding.btnDone.onDelayedClick {
+            viewModel.userIntent.tryEmit(HomeIntent.OnButtonDoneClick)
         }
     }
 
@@ -71,17 +68,10 @@ class HomeFragment : BaseFragment(R.layout.screen_home) {
                 is HomeViewState.Idle -> Unit
                 is HomeViewState.ShowLoading -> showLoading()
                 is HomeViewState.HideLoading -> hideLoading()
-                is HomeViewState.ShowContent -> showContent()
-                is HomeViewState.HideContent -> hideContent()
-                is HomeViewState.UpdateTotalValues -> updateTotalValues(
-                    viewState.count,
-                    viewState.price
-                )
+                is HomeViewState.ClearState -> clearState()
                 is HomeViewState.Error -> showError(viewState.message)
                 is HomeViewState.SuccessPrintReceipt -> printSlip(viewState.printModel)
-                is HomeViewState.SuccessStaffClose -> printSlip(viewState.printModel, false)
-                is HomeViewState.ShowEmptyContent -> showEmptyContent()
-                is HomeViewState.HideEmptyContent -> hideEmptyContent()
+                is HomeViewState.FetchInputAmount -> fetchInputAmount(viewState.amount, viewState.btnEnabled)
                 else -> Unit
             }
         }.launchWhenStarted(lifecycleScope)
@@ -117,27 +107,16 @@ class HomeFragment : BaseFragment(R.layout.screen_home) {
         dialogErrorTextView = dialogView.findViewById(R.id.errorTextView)
     }
 
-    private fun showCloseStaffDialog() {
-        val dialog = AlertDialog.Builder(requireContext(), R.style.RoundedDialogStyle)
-            .setMessage(R.string.home_screen_close_shift_dialog_title)
-            .setNegativeButton(
-                R.string.home_screen_close_shift_dialog_negative_btn
-            ) { dialog, _ ->
-                dialog.dismiss()
+    private fun initInputAmount() {
+        with(viewBinding) {
+            etAmount.doAfterTextChanged {
+                viewModel.userIntent.tryEmit(HomeIntent.OnAmountChanged(it?.trim()?.toString()))
             }
-            .setPositiveButton(
-                R.string.home_screen_close_shift_dialog_positive_btn
-            ) { _, _ ->
-                viewModel.userIntent.tryEmit(HomeIntent.StaffClose)
+            tvAmount.onDelayedClick {
+                etAmount.requestFocus()
+                showKeyboard()
             }
-            .create()
-        dialog.show()
-        dialog
-            .getButton(DialogInterface.BUTTON_NEGATIVE)
-            .setTextColor(resColor(R.color.colorPrimaryDark))
-        dialog
-            .getButton(DialogInterface.BUTTON_POSITIVE)
-            .setTextColor(resColor(R.color.colorPrimaryDark))
+        }
     }
 
     private fun showLoading() = lifecycleScope.launchWhenStarted {
@@ -149,6 +128,7 @@ class HomeFragment : BaseFragment(R.layout.screen_home) {
     }
 
     private fun showError(message: String) {
+        hideLoading()
         lifecycleScope.launchWhenStarted {
             dialogErrorTextView?.text = message
             dialogError?.show()
@@ -157,32 +137,10 @@ class HomeFragment : BaseFragment(R.layout.screen_home) {
         }
     }
 
-    private fun showContent() {
-
-    }
-
-    private fun hideContent() {
-
-    }
-
-    private fun showEmptyContent() {
-
-    }
-
-    private fun hideEmptyContent() {
-
-    }
-
-    private fun updateTotalValues(count: Int, price: Double) {
-        with(viewBinding) {
-
-        }
-    }
-
     private fun printSlip(printModel: PrintModel, withAlert: Boolean = true) {
         lifecycleScope.launchWhenStarted {
             try {
-                val resultOpen = fptrServiceBinder?.processJson(printModel.print)
+                val resultOpen = fptrServiceBinder?.processJson(printModel.paperPrint)
                 Timber.tag("PRINT_RESULT").e(resultOpen)
             } catch (e: RemoteException) {
                 e.printStackTrace()
@@ -191,12 +149,36 @@ class HomeFragment : BaseFragment(R.layout.screen_home) {
                 dialogSuccess?.show()
                 delay(2000)
                 dialogSuccess?.dismiss()
-            } else {
-                viewModel.userIntent.tryEmit(
-                    HomeIntent.GoToEnterScreen
-                )
             }
         }
+    }
+
+    private fun fetchInputAmount(amount: String, btnEnabled: Boolean) {
+        viewBinding.tvAmount.text = getString(
+            R.string.item_price,
+            amount
+        )
+        updateButtonEnabledState(btnEnabled)
+    }
+
+    private fun updateButtonEnabledState(enabled: Boolean) {
+        with(viewBinding.btnDone) {
+            isEnabled = enabled
+            isClickable = enabled
+            backgroundTintList = ColorStateList.valueOf(
+                resColor(
+                    if (enabled) {
+                        R.color.electric_violet
+                    } else {
+                        R.color.grey_BAB9B9
+                    }
+                )
+            )
+        }
+    }
+
+    private fun clearState() {
+        viewBinding.etAmount.setText("")
     }
 
     override fun onDestroyView() {

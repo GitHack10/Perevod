@@ -20,8 +20,12 @@ object AppRequestInterceptor : Interceptor, KoinComponent {
         val originalRequest = chain.request()
         val originalUrl = originalRequest.url
 
+        if (originalUrl.pathSegments.contains("connect")) {
+            return chain.proceed(originalRequest)
+        }
+
         val newUrl = originalUrl.newBuilder()
-            .addQueryParameter("deviceId", prefs.deviceId)
+            .addQueryParameter("sdkKey", prefs.sdkKey)
 
         val requestBuilder = originalRequest.newBuilder().url(newUrl.build())
 

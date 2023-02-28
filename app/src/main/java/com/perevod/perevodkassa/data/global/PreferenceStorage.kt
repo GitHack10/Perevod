@@ -12,9 +12,8 @@ import kotlin.reflect.KProperty
  */
 interface PreferenceStorage {
     var isFirstLaunch: Boolean
-    var token: String?
     var isLogged: Boolean
-    var deviceId: String?
+    var sdkKey: String?
 }
 
 class SharedPreferenceStorage(context: Context) : PreferenceStorage {
@@ -25,18 +24,15 @@ class SharedPreferenceStorage(context: Context) : PreferenceStorage {
 
     override var isFirstLaunch by BooleanPreference(prefs, PREF_FIRST_LAUNCH, true)
 
-    override var token by StringPreference(prefs, PREF_TOKEN, null)
-
     override var isLogged by BooleanPreference(prefs, PREF_IS_LOGGED, false)
 
-    override var deviceId by StringPreference(prefs, PREF_DEVICE_ID, null)
+    override var sdkKey by StringPreference(prefs, PREF_SDK_KEY, null)
 
     companion object {
         const val PREF_NAME = "SHARED_PREFERENCES_FILE_COMMON"
         const val PREF_FIRST_LAUNCH = "PREF_FIRST_LAUNCH"
         const val PREF_IS_LOGGED = "PREF_IS_LOGGED"
-        const val PREF_TOKEN = "PREF_TOKEN"
-        const val PREF_DEVICE_ID = "PREF_DEVICE_ID"
+        const val PREF_SDK_KEY = "PREF_SDK_KEY"
     }
 }
 

@@ -62,8 +62,8 @@ abstract class BaseFragment(resourceLayout: Int) : Fragment(resourceLayout) {
     protected fun Fragment.showKeyboard() = activity?.showKeyboard()
     protected fun Fragment.setSoftInputMode(mode: Int) = activity?.window?.setSoftInputMode(mode)
 
-    private fun Activity.showKeyboard() = showKeyboard(currentFocus ?: android.view.View(this))
-    private fun Activity.hideKeyboard() = hideKeyboard(currentFocus ?: android.view.View(this))
+    private fun Activity.showKeyboard() = showKeyboard(currentFocus ?: View(this))
+    private fun Activity.hideKeyboard() = hideKeyboard(currentFocus ?: View(this))
 
     private fun Context.hideKeyboard(view: View) {
         val imm = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager

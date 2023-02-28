@@ -58,4 +58,4 @@ val dataModule = module {
     factory<ApiService> { get<Retrofit>().create(ApiService::class.java) }
 }
 
-private const val BASE_URL = "https://kassa.perevod.io/api/v2/android/"
+private const val BASE_URL = "https://api-stub.perevod.io:8443/api/v2/"

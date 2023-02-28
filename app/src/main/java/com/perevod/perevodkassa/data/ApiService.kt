@@ -1,8 +1,12 @@
 package com.perevod.perevodkassa.data
 
-import com.perevod.perevodkassa.data.global.BaseResponse
 import com.perevod.perevodkassa.domain.PrintModel
+import com.perevod.perevodkassa.domain.connect_cashier.ConnectCashierRequest
+import com.perevod.perevodkassa.domain.connect_cashier.ConnectCashierResponse
+import com.perevod.perevodkassa.domain.init_cashier.InitCashierRequest
+import com.perevod.perevodkassa.domain.init_cashier.InitCashierResponse
 import retrofit2.Response
+import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
@@ -12,30 +16,18 @@ import retrofit2.http.Query
  */
 interface ApiService {
 
-    /**
-     * Запрос на привязку кассы по номеру телефона и deviceId
-     *
-     * @param phone - номер телефона пользователя
-     */
-    @POST("connect")
-    suspend fun makeAuth(
-        @Query("phone") phone: Int
-    ): Response<BaseResponse>
+    @POST("cashier/connect")
+    suspend fun connectCashier(
+        @Body requestBody: ConnectCashierRequest
+    ): Response<ConnectCashierResponse>
 
-    @GET("receipt")
-    suspend fun printReceipt(): Response<PrintModel>
+    @POST("payment/cashier/init")
+    suspend fun initCashier(
+        @Body requestBody: InitCashierRequest
+    ): Response<InitCashierResponse>
 
-    /**
-     * Запрос на открытие смены
-     */
-    @POST("staff")
-    suspend fun staffOpen(
-        @Query("cardNumber") cardNumber: String
-    ): Response<BaseResponse>
-
-    /**
-     * Запрос на закрытие смены
-     */
-    @POST("staff_close")
-    suspend fun staffClose(): Response<PrintModel>
+    @GET("payment/cashier/print")
+    suspend fun printReceipt(
+        @Query("type") type: String = "paper" // todo заменить на передачу выбранного типа
+    ): Response<PrintModel>
 }

@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">PerevodKassa</string>
 
-    <string name="item_product_price">%s ₽</string>
+    <string name="item_price">%s ₽</string>
 
     <string name="phone_input_hint_text">Номер телефона</string>
     <string name="phone_input_authorize_button_title">Закрепить кассу</string>
@@ -16,8 +16,13 @@
     <string name="auth_screen_input_scan">Просканируйте карту</string>
     <string name="auth_screen_enter_btn">Открыть смену</string>
 
+    <string name="home_screen_title">Введите сумму</string>
+    <string name="home_screen_input_hint">0₽</string>
+    <string name="home_screen_btn_done">Готово</string>
     <string name="home_screen_scan_product">Просканируйте товар</string>
     <string name="home_screen_close_shift_dialog_title">Вы действительно хотите закрыть смену?</string>
     <string name="home_screen_close_shift_dialog_negative_btn">Нет</string>
     <string name="home_screen_close_shift_dialog_positive_btn">Да</string>
+
+    <string name="toolbar_title">Оплата</string>
 </resources>

@@ -8,13 +8,6 @@
     android:orientation="vertical">
 
     <androidx.appcompat.widget.AppCompatImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        app:srcCompat="@drawable/ic_launcher_foreground"
-        app:tint="@color/colorAccent" />
-
-    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/successImageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -43,6 +36,6 @@
         android:gravity="center"
         android:textColor="#6B6B6B"
         android:textSize="32sp"
-        tools:text="Этот номер телефона не зарегистрирован в системе Perevod" />
+        tools:text="Ошибка при выполнении транзакции" />
 
 </LinearLayout>
