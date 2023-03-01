@@ -2,15 +2,17 @@ package com.perevod.perevodkassa.domain.repositoryimpl
 
 import com.perevod.perevodkassa.data.ApiService
 import com.perevod.perevodkassa.data.network.Request
-import com.perevod.perevodkassa.data.repository.HomeRepository
+import com.perevod.perevodkassa.data.repository.MainRepository
 import com.perevod.perevodkassa.domain.connect_cashier.ConnectCashierRequest
 import com.perevod.perevodkassa.domain.init_cashier.InitCashierRequest
+import com.perevod.perevodkassa.domain.use_case.PrintType
 import com.perevod.perevodkassa.presentation.global.extensions.makeRequest
 import com.perevod.perevodkassa.presentation.screens.home.HomeViewState
+import com.perevod.perevodkassa.presentation.screens.payment_success.PaymentSuccessViewState
 
 class HomeRepositoryImpl(
     private val api: ApiService,
-) : HomeRepository {
+) : MainRepository {
 
     override suspend fun connectCashier(request: ConnectCashierRequest): HomeViewState<Any> =
         when (val result = makeRequest { api.connectCashier(request) }) {
@@ -24,9 +26,9 @@ class HomeRepositoryImpl(
             is Request.Error -> HomeViewState.Error(message = result.exception.message)
         }
 
-    override suspend fun printReceipt(): HomeViewState<Any> =
-        when (val result = makeRequest { api.printReceipt() }) {
-            is Request.Success -> HomeViewState.SuccessPrintReceipt(result.data)
-            is Request.Error -> HomeViewState.Error(message = result.exception.message)
+    override suspend fun printReceipt(printType: PrintType): PaymentSuccessViewState<Any> =
+        when (val result = makeRequest { api.printReceipt(printType.value) }) {
+            is Request.Success -> PaymentSuccessViewState.SuccessPrintReceipt(result.data)
+            is Request.Error -> PaymentSuccessViewState.Error(message = result.exception.message)
         }
 }

@@ -2,11 +2,13 @@ package com.perevod.perevodkassa.data.repository
 
 import com.perevod.perevodkassa.domain.connect_cashier.ConnectCashierRequest
 import com.perevod.perevodkassa.domain.init_cashier.InitCashierRequest
+import com.perevod.perevodkassa.domain.use_case.PrintType
 import com.perevod.perevodkassa.presentation.screens.home.HomeViewState
+import com.perevod.perevodkassa.presentation.screens.payment_success.PaymentSuccessViewState
 
-interface HomeRepository {
+interface MainRepository {
 
     suspend fun connectCashier(request: ConnectCashierRequest): HomeViewState<Any>
     suspend fun initCashier(request: InitCashierRequest): HomeViewState<Any>
-    suspend fun printReceipt(): HomeViewState<Any>
+    suspend fun printReceipt(printType: PrintType): PaymentSuccessViewState<Any>
 }

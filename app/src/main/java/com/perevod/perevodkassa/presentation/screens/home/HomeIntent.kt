@@ -2,7 +2,6 @@ package com.perevod.perevodkassa.presentation.screens.home
 
 sealed class HomeIntent {
 
-    object PrintReceipt : HomeIntent()
     object OnBackPressed : HomeIntent()
 
     data class OnAmountChanged(
@@ -10,4 +9,5 @@ sealed class HomeIntent {
     ) : HomeIntent()
 
     object OnButtonDoneClick : HomeIntent()
+    object GoToPaymentSuccessScreen : HomeIntent()
 }

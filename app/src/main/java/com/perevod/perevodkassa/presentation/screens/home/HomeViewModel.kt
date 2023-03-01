@@ -8,6 +8,7 @@ import com.perevod.perevodkassa.domain.PrintModel
 import com.perevod.perevodkassa.domain.interactor.HomeInteractor
 import com.perevod.perevodkassa.presentation.global.BaseViewModel
 import com.perevod.perevodkassa.presentation.global.extensions.getFormattedPrice
+import com.perevod.perevodkassa.presentation.global.navigation.Screens
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -36,7 +37,10 @@ class HomeViewModel(
 
     init {
         if (prefs.sdkKey.isNullOrBlank()) {
+            _viewState.value = HomeViewState.DisableInput
             connect()
+        } else {
+            _viewState.value = HomeViewState.EnableInput
         }
     }
 
@@ -60,10 +64,10 @@ class HomeViewModel(
 
         userIntent.onEach { intent ->
             when (intent) {
-                is HomeIntent.PrintReceipt -> printReceipt()
                 is HomeIntent.OnBackPressed -> onBackPressed()
                 is HomeIntent.OnAmountChanged -> onInputAmountChanged(intent.inputText)
                 is HomeIntent.OnButtonDoneClick -> onButtonDoneClicked()
+                is HomeIntent.GoToPaymentSuccessScreen -> goToPaymentSuccessScreen()
             }
         }.launchIn(viewModelScope)
     }
@@ -74,22 +78,7 @@ class HomeViewModel(
             when (val result = interactor.connectCashier()) {
                 is HomeViewState.SuccessConnectCashier -> {
                     prefs.sdkKey = result.connectCashierResponse.sdkKey
-                }
-                else -> _viewState.value = result
-            }
-        }.invokeOnCompletion {
-            _viewState.value = HomeViewState.HideLoading
-        }
-    }
-
-    private fun printReceipt() {
-        _viewState.value = HomeViewState.ShowLoading
-        viewModelScope.launch {
-            when (val result = interactor.printReceipt()) {
-                is HomeViewState.SuccessPrintReceipt -> {
-                    printMutableLiveData.value = result.printModel
-                    _viewState.value = HomeViewState.SuccessPrintReceipt(result.printModel)
-                    clearState()
+                    _viewState.value = HomeViewState.EnableInput
                 }
                 else -> _viewState.value = result
             }
@@ -104,7 +93,8 @@ class HomeViewModel(
         viewModelScope.launch {
             when (val result = interactor.initCashier(amount)) {
                 is HomeViewState.SuccessInitCashier -> {
-                    printReceipt()
+                    clearState()
+                    userIntent.tryEmit(HomeIntent.GoToPaymentSuccessScreen)
                 }
                 else -> _viewState.value = result
             }
@@ -115,5 +105,9 @@ class HomeViewModel(
         amountMutableLiveData.value = 0f
         printMutableLiveData.value = null
         _viewState.value = HomeViewState.ClearState
+    }
+
+    private fun goToPaymentSuccessScreen() {
+        router.navigateTo(Screens.paymentSuccessScreen())
     }
 }

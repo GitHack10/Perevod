@@ -1,14 +1,14 @@
 package com.perevod.perevodkassa.domain.interactor
 
 import android.content.Context
-import com.perevod.perevodkassa.data.repository.HomeRepository
+import com.perevod.perevodkassa.data.repository.MainRepository
 import com.perevod.perevodkassa.domain.connect_cashier.ConnectCashierRequest
 import com.perevod.perevodkassa.domain.init_cashier.InitCashierRequest
 import com.perevod.perevodkassa.domain.init_cashier.Payload
 import com.perevod.perevodkassa.presentation.global.extensions.getDeviceId
 
 class HomeInteractor(
-    private val repository: HomeRepository,
+    private val repository: MainRepository,
     private val context: Context
 ) {
 
@@ -27,6 +27,4 @@ class HomeInteractor(
             payload = Payload("some_data") // todo заменить на реальные данные
         )
     )
-
-    suspend fun printReceipt() = repository.printReceipt()
 }

@@ -59,19 +59,16 @@ fun View.makeInvisible() {
 fun View.makeEnabled() {
     isFocusable = true
     isEnabled = true
-    isFocusable = true
 }
 
 fun View.makeDisabled() {
     isFocusable = false
     isEnabled = false
-    isFocusable = false
 }
 
 fun View.setEnabled(enabled: Boolean) {
     isFocusable = enabled
     isEnabled = enabled
-    isFocusable = enabled
 }
 
 fun Button.clearText() {
