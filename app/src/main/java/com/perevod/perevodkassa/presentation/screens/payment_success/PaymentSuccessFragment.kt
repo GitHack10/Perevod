@@ -15,10 +15,9 @@ import com.google.android.material.textview.MaterialTextView
 import com.perevod.perevodkassa.R
 import com.perevod.perevodkassa.databinding.ScreenPaymentSuccessBinding
 import com.perevod.perevodkassa.presentation.global.BaseFragment
+import com.perevod.perevodkassa.presentation.global.extensions.getFormattedPrice
 import com.perevod.perevodkassa.presentation.global.extensions.launchWhenStarted
 import com.perevod.perevodkassa.presentation.global.extensions.onDelayedClick
-import com.perevod.perevodkassa.utils.createCircleRippleDrawable
-import com.perevod.perevodkassa.utils.resColor
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.onEach
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -27,10 +26,15 @@ import timber.log.Timber
 
 class PaymentSuccessFragment : BaseFragment(R.layout.screen_payment_success) {
 
+    companion object {
+        const val EXTRA_AMOUNT = "arg_amount"
+    }
+
     private var dialogSuccess: Dialog? = null
     private var dialogError: Dialog? = null
     private var dialogErrorTextView: MaterialTextView? = null
     private var fptrServiceBinder: IFptrService? = null
+    private var currentAmount: Int = 0
 
     private val viewBinding: ScreenPaymentSuccessBinding by viewBinding()
     private val viewModel: PaymentSuccessViewModel by viewModel()
@@ -90,7 +94,14 @@ class PaymentSuccessFragment : BaseFragment(R.layout.screen_payment_success) {
     }
 
     private fun showQrCode(qrBitmap: Bitmap?) {
-        viewBinding.ivQrCode.setImageBitmap(qrBitmap)
+        val currentAmount = (arguments?.getInt(EXTRA_AMOUNT, 0) ?: 0).getFormattedPrice()
+        with(viewBinding) {
+            ivQrCode.setImageBitmap(qrBitmap)
+            tvAmountTitle.text = getString(
+                R.string.payment_success_screen_amount_title,
+                currentAmount
+            )
+        }
     }
 
     private fun showLoading() = lifecycleScope.launchWhenStarted {
@@ -135,18 +146,12 @@ class PaymentSuccessFragment : BaseFragment(R.layout.screen_payment_success) {
 
     private fun initButtonListeners() {
         with(viewBinding) {
+            btnGoBack.onDelayedClick {
+                viewModel.userIntent.tryEmit(PaymentSuccessIntent.OnBackPressed)
+            }
             btnPrintQr.onDelayedClick {
                 viewModel.userIntent.tryEmit(PaymentSuccessIntent.PrintReceipt)
             }
-            btnShowQr.onDelayedClick {
-                viewModel.userIntent.tryEmit(PaymentSuccessIntent.ShowQrCode)
-            }
-            paymentSuccessToolbar.ivBackButton.setOnClickListener {
-                viewModel.userIntent.tryEmit(PaymentSuccessIntent.OnBackPressed)
-            }
-            paymentSuccessToolbar.ivBackButton.background = createCircleRippleDrawable(
-                resColor(R.color.ripple_primary)
-            )
         }
     }
 

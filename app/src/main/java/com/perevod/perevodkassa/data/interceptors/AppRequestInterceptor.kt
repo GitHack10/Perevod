@@ -24,13 +24,12 @@ object AppRequestInterceptor : Interceptor, KoinComponent {
             return chain.proceed(originalRequest)
         }
 
-        val newUrl = originalUrl.newBuilder()
-            .addQueryParameter("sdkKey", prefs.sdkKey)
-
-        val requestBuilder = originalRequest.newBuilder().url(newUrl.build())
+        val requestBuilder = originalRequest
+            .newBuilder()
+            .addHeader("SDK-API-Key", "${prefs.sdkKey}")
 
         if (BuildConfig.DEBUG) {
-            Timber.tag("REQUEST_URL_PRINT").e(newUrl.toString())
+            Timber.tag("REQUEST_HEADER_SDK_KEY_PRINT").e(prefs.sdkKey)
         }
 
         return chain.proceed(requestBuilder.build())

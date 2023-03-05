@@ -9,9 +9,6 @@ sealed class HomeViewState<out T : Any> {
     object Idle : HomeViewState<Unit>()
     object ShowLoading : HomeViewState<Unit>()
     object HideLoading : HomeViewState<Unit>()
-    object ClearState : HomeViewState<Unit>()
-    object EnableInput : HomeViewState<Unit>()
-    object DisableInput : HomeViewState<Unit>()
 
     data class FetchInputAmount(
         val amount: String,

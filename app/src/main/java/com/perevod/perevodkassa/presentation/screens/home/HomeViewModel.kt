@@ -23,8 +23,9 @@ class HomeViewModel(
     private val router: Router,
 ) : BaseViewModel() {
 
-    private val amountMutableLiveData: MutableLiveData<Float> = MutableLiveData(0f)
-    private val printMutableLiveData: MutableLiveData<PrintModel?> = MutableLiveData()
+    private var printModel: PrintModel? = null
+
+    private var currentAmountList: List<Int> = emptyList()
 
     private val _viewState = MutableStateFlow<HomeViewState<Any>>(HomeViewState.Idle)
 
@@ -35,12 +36,12 @@ class HomeViewModel(
         onBufferOverflow = BufferOverflow.DROP_OLDEST
     )
 
+    val inputStateMutableLiveData: MutableLiveData<TransitionAnimState> =
+        MutableLiveData(TransitionAnimState.Idle)
+
     init {
         if (prefs.sdkKey.isNullOrBlank()) {
-            _viewState.value = HomeViewState.DisableInput
             connect()
-        } else {
-            _viewState.value = HomeViewState.EnableInput
         }
     }
 
@@ -48,16 +49,32 @@ class HomeViewModel(
         handleIntents()
     }
 
-    private fun onInputAmountChanged(inputText: String?) {
-        val text = inputText ?: return
-        val currentAmount = text.toIntOrNull() ?: 0
-        val formattedAmount = currentAmount.getFormattedPrice()
-        val btnEnabled = currentAmount > 0
-        amountMutableLiveData.value = currentAmount.toFloat()
+    private fun onInputAmountChanged(inputText: KeyboardNumber) {
+        val newAmountList = when {
+            inputText == KeyboardNumber.Delete && currentAmountList.isNotEmpty() -> {
+                currentAmountList.dropLast(1)
+            }
+            currentAmountList.isNotEmpty() -> {
+                currentAmountList + listOf(inputText.value)
+            }
+            else -> {
+                listOf(inputText.value)
+            }
+        }
+        val newAmount = newAmountList.joinToString("").toIntOrNull() ?: 0
+        val formattedAmount = newAmount.getFormattedPrice()
+        val btnEnabled = newAmount > 0
+        currentAmountList = newAmountList
         _viewState.value = HomeViewState.FetchInputAmount(
             formattedAmount,
             btnEnabled
         )
+        val currentAnimState = inputStateMutableLiveData.value ?: TransitionAnimState.Idle
+        val newAnimState = TransitionAnimState.getStateByEnabledFlag(btnEnabled)
+        if (currentAnimState == newAnimState) {
+            return
+        }
+        inputStateMutableLiveData.value = newAnimState
     }
 
     private fun handleIntents() {
@@ -67,7 +84,7 @@ class HomeViewModel(
                 is HomeIntent.OnBackPressed -> onBackPressed()
                 is HomeIntent.OnAmountChanged -> onInputAmountChanged(intent.inputText)
                 is HomeIntent.OnButtonDoneClick -> onButtonDoneClicked()
-                is HomeIntent.GoToPaymentSuccessScreen -> goToPaymentSuccessScreen()
+                is HomeIntent.GoToPaymentSuccessScreen -> goToPaymentSuccessScreen(intent.amount)
             }
         }.launchIn(viewModelScope)
     }
@@ -78,7 +95,6 @@ class HomeViewModel(
             when (val result = interactor.connectCashier()) {
                 is HomeViewState.SuccessConnectCashier -> {
                     prefs.sdkKey = result.connectCashierResponse.sdkKey
-                    _viewState.value = HomeViewState.EnableInput
                 }
                 else -> _viewState.value = result
             }
@@ -88,13 +104,15 @@ class HomeViewModel(
     }
 
     private fun onButtonDoneClicked() {
-        val amount = amountMutableLiveData.value ?: return
+        val amount = currentAmountList
+            .joinToString("")
+            .toIntOrNull() ?: return
         _viewState.value = HomeViewState.ShowLoading
         viewModelScope.launch {
-            when (val result = interactor.initCashier(amount)) {
+            when (val result = interactor.initCashier(amount.toFloat())) {
                 is HomeViewState.SuccessInitCashier -> {
                     clearState()
-                    userIntent.tryEmit(HomeIntent.GoToPaymentSuccessScreen)
+                    userIntent.tryEmit(HomeIntent.GoToPaymentSuccessScreen(amount))
                 }
                 else -> _viewState.value = result
             }
@@ -102,12 +120,12 @@ class HomeViewModel(
     }
 
     private fun clearState() {
-        amountMutableLiveData.value = 0f
-        printMutableLiveData.value = null
-        _viewState.value = HomeViewState.ClearState
+        printModel = null
+        inputStateMutableLiveData.value = TransitionAnimState.Idle
+        currentAmountList = emptyList()
     }
 
-    private fun goToPaymentSuccessScreen() {
-        router.navigateTo(Screens.paymentSuccessScreen())
+    private fun goToPaymentSuccessScreen(amount: Int) {
+        router.navigateTo(Screens.paymentSuccessScreen(amount))
     }
 }

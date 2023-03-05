@@ -6,13 +6,14 @@
     <string name="success_text">Операция успешно выполнена</string>
     <string name="error_text">Внимание</string>
 
-    <string name="toolbar_title">Оплата</string>
+    <string name="toolbar_title">perevod.io</string>
 
-    <string name="home_screen_title">Введите сумму</string>
-    <string name="home_screen_input_hint">0₽</string>
-    <string name="home_screen_btn_done">Готово</string>
+    <string name="home_screen_title">Сумма для оплаты</string>
+    <string name="home_screen_input_hint">0 ₽</string>
+    <string name="home_screen_btn_next">Продолжить</string>
 
-    <string name="payment_success_screen_print">Напечатать QR-code</string>
-    <string name="payment_success_screen_show_qr">Показать QR-code на экране</string>
+    <string name="payment_success_screen_print">Распечатать чек</string>
+    <string name="payment_success_screen_back">Назад</string>
+    <string name="payment_success_screen_amount_title">Сумма для оплаты: %s₽</string>
 
 </resources>

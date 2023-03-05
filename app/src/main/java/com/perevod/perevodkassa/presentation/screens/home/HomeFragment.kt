@@ -2,8 +2,8 @@ package com.perevod.perevodkassa.presentation.screens.home
 
 import android.app.Dialog
 import android.content.res.ColorStateList
+import android.graphics.drawable.TransitionDrawable
 import androidx.core.view.isVisible
-import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.lifecycleScope
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.textview.MaterialTextView
@@ -11,8 +11,6 @@ import com.perevod.perevodkassa.R
 import com.perevod.perevodkassa.databinding.ScreenHomeBinding
 import com.perevod.perevodkassa.presentation.global.BaseFragment
 import com.perevod.perevodkassa.presentation.global.extensions.launchWhenStarted
-import com.perevod.perevodkassa.presentation.global.extensions.makeDisabled
-import com.perevod.perevodkassa.presentation.global.extensions.makeEnabled
 import com.perevod.perevodkassa.presentation.global.extensions.onDelayedClick
 import com.perevod.perevodkassa.utils.DebouncingQueryTextListener
 import com.perevod.perevodkassa.utils.resColor
@@ -21,6 +19,10 @@ import kotlinx.coroutines.flow.onEach
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeFragment : BaseFragment(R.layout.screen_home) {
+
+    companion object {
+        private const val TRANSITION_ANIM_DURATION = 200
+    }
 
     private var queryTextChangeListener: DebouncingQueryTextListener? = null
     private var dialogSuccess: Dialog? = null
@@ -31,14 +33,12 @@ class HomeFragment : BaseFragment(R.layout.screen_home) {
     private val viewModel: HomeViewModel by viewModel()
 
     override fun prepareUi() {
+        viewBinding.init()
         initSuccessDialog()
         initErrorDialog()
-        initInputAmount()
-        viewBinding.etAmount.requestFocus()
+        initButtonNext()
+        initKeyboardButtons()
         showKeyboard()
-        viewBinding.btnDone.onDelayedClick {
-            viewModel.userIntent.tryEmit(HomeIntent.OnButtonDoneClick)
-        }
     }
 
     override fun setupViewModel() {
@@ -47,9 +47,6 @@ class HomeFragment : BaseFragment(R.layout.screen_home) {
                 is HomeViewState.Idle -> Unit
                 is HomeViewState.ShowLoading -> showLoading()
                 is HomeViewState.HideLoading -> hideLoading()
-                is HomeViewState.ClearState -> clearState()
-                is HomeViewState.EnableInput -> enableInput()
-                is HomeViewState.DisableInput -> disableInput()
                 is HomeViewState.Error -> showError(viewState.message)
                 is HomeViewState.FetchInputAmount -> fetchInputAmount(viewState.amount, viewState.btnEnabled)
                 else -> Unit
@@ -79,14 +76,56 @@ class HomeFragment : BaseFragment(R.layout.screen_home) {
         dialogErrorTextView = dialogView.findViewById(R.id.errorTextView)
     }
 
-    private fun initInputAmount() {
-        with(viewBinding) {
-            etAmount.doAfterTextChanged {
-                viewModel.userIntent.tryEmit(HomeIntent.OnAmountChanged(it?.trim()?.toString()))
+    private fun initButtonNext() {
+        with(viewBinding.btnNext) {
+            viewModel.inputStateMutableLiveData.observe(this@HomeFragment) {
+                tryStartOrReverseNextBtnTransitionAnim(it)
+                updateInputFieldColors(it)
             }
-            tvAmount.onDelayedClick {
-                etAmount.requestFocus()
-                showKeyboard()
+            onDelayedClick {
+                viewModel.userIntent.tryEmit(HomeIntent.OnButtonDoneClick)
+            }
+            tryStartOrReverseNextBtnTransitionAnim(TransitionAnimState.Idle)
+        }
+    }
+
+    private fun initKeyboardButtons() {
+        with(viewBinding) {
+            tvNum1.setOnClickListener {
+                viewModel.userIntent.tryEmit(HomeIntent.OnAmountChanged(KeyboardNumber.One))
+            }
+            tvNum2.setOnClickListener {
+                viewModel.userIntent.tryEmit(HomeIntent.OnAmountChanged(KeyboardNumber.Two))
+            }
+            tvNum3.setOnClickListener {
+                viewModel.userIntent.tryEmit(HomeIntent.OnAmountChanged(KeyboardNumber.Three))
+            }
+            tvNum4.setOnClickListener {
+                viewModel.userIntent.tryEmit(HomeIntent.OnAmountChanged(KeyboardNumber.Four))
+            }
+            tvNum5.setOnClickListener {
+                viewModel.userIntent.tryEmit(HomeIntent.OnAmountChanged(KeyboardNumber.Five))
+            }
+            tvNum6.setOnClickListener {
+                viewModel.userIntent.tryEmit(HomeIntent.OnAmountChanged(KeyboardNumber.Six))
+            }
+            tvNum7.setOnClickListener {
+                viewModel.userIntent.tryEmit(HomeIntent.OnAmountChanged(KeyboardNumber.Seven))
+            }
+            tvNum8.setOnClickListener {
+                viewModel.userIntent.tryEmit(HomeIntent.OnAmountChanged(KeyboardNumber.Eight))
+            }
+            tvNum9.setOnClickListener {
+                viewModel.userIntent.tryEmit(HomeIntent.OnAmountChanged(KeyboardNumber.Nine))
+            }
+            tvNumDot.setOnClickListener {
+                viewModel.userIntent.tryEmit(HomeIntent.OnAmountChanged(KeyboardNumber.Dot))
+            }
+            tvNum0.setOnClickListener {
+                viewModel.userIntent.tryEmit(HomeIntent.OnAmountChanged(KeyboardNumber.Zero))
+            }
+            ivDelete.setOnClickListener {
+                viewModel.userIntent.tryEmit(HomeIntent.OnAmountChanged(KeyboardNumber.Delete))
             }
         }
     }
@@ -118,35 +157,33 @@ class HomeFragment : BaseFragment(R.layout.screen_home) {
     }
 
     private fun updateButtonEnabledState(enabled: Boolean) {
-        with(viewBinding.btnDone) {
+        with(viewBinding.btnNext) {
             isEnabled = enabled
             isClickable = enabled
-            backgroundTintList = ColorStateList.valueOf(
-                resColor(
-                    if (enabled) {
-                        R.color.electric_violet
-                    } else {
-                        R.color.grey_BAB9B9
-                    }
-                )
-            )
         }
     }
 
-    private fun clearState() {
-        viewBinding.etAmount.setText("")
-    }
-
-    private fun enableInput() {
-        with(viewBinding.etAmount) {
-            makeEnabled()
-            requestFocus()
+    private fun tryStartOrReverseNextBtnTransitionAnim(transitionAnimState: TransitionAnimState) {
+        with(viewBinding.btnNext) {
+            isEnabled = transitionAnimState.isStart
+            isClickable = transitionAnimState.isStart
+            if (transitionAnimState.isStart) {
+                (background as TransitionDrawable).startTransition(TRANSITION_ANIM_DURATION)
+            } else {
+                (background as TransitionDrawable).reverseTransition(TRANSITION_ANIM_DURATION)
+            }
         }
     }
 
-    private fun disableInput() {
-        with(viewBinding.etAmount) {
-            makeDisabled()
+    private fun updateInputFieldColors(transitionAnimState: TransitionAnimState) {
+        with(viewBinding) {
+            val color = if (transitionAnimState.isStart) {
+                R.color.white
+            } else {
+                R.color.white_67
+            }
+            tvAmount.setTextColor(resColor(color))
+            ivDelete.imageTintList = ColorStateList.valueOf(resColor(color))
         }
     }
 

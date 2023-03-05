@@ -9,7 +9,9 @@ import com.perevod.perevodkassa.data.global.PreferenceStorage
 import com.perevod.perevodkassa.domain.use_case.GetPrintDataUseCase
 import com.perevod.perevodkassa.domain.use_case.PrintType
 import com.perevod.perevodkassa.presentation.global.BaseViewModel
+import com.perevod.perevodkassa.presentation.global.navigation.Screens
 import com.perevod.perevodkassa.utils.createQrBitmap
+import com.perevod.perevodkassa.utils.dpToPx
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,6 +36,7 @@ class PaymentSuccessViewModel(
 
     override fun onAttach() {
         handleIntents()
+        userIntent.tryEmit(PaymentSuccessIntent.ShowQrCode)
     }
 
     private fun handleIntents() {
@@ -69,7 +72,11 @@ class PaymentSuccessViewModel(
                     val qrBitmap = createBarCode(result.printModel.screenPrint)
                     _viewState.value = PaymentSuccessViewState.ShowQrCode(qrBitmap)
                 }
-                else -> _viewState.value = result
+                else -> {
+                    _viewState.value = result
+                    val qrBitmap = createBarCode("https://google.com/")
+                    _viewState.value = PaymentSuccessViewState.ShowQrCode(qrBitmap)
+                }
             }
         }.invokeOnCompletion {
             _viewState.value = PaymentSuccessViewState.HideLoading
@@ -78,11 +85,11 @@ class PaymentSuccessViewModel(
 
     private fun createBarCode(screenPrint: String?): Bitmap? {
         val multiFormatWriter = MultiFormatWriter()
-        val bitMatrix = multiFormatWriter.encode(screenPrint, BarcodeFormat.QR_CODE, 400, 600)
+        val bitMatrix = multiFormatWriter.encode(screenPrint, BarcodeFormat.QR_CODE, 340.dpToPx, 340.dpToPx)
         return createQrBitmap(bitMatrix)
     }
 
     override fun onBackPressed() {
-        router.exit()
+        router.replaceScreen(Screens.homeScreen())
     }
 }

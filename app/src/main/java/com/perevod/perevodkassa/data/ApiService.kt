@@ -28,6 +28,6 @@ interface ApiService {
 
     @GET("payment/cashier/print")
     suspend fun printReceipt(
-        @Query("type") type: String = "paper" // todo заменить на передачу выбранного типа
+        @Query("type") type: String
     ): Response<PrintModel>
 }
