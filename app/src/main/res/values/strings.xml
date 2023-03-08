@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">PerevodKassa</string>
 
-    <string name="item_price">%s ₽</string>
+    <string name="item_price">%s₽</string>
 
     <string name="success_text">Операция успешно выполнена</string>
     <string name="error_text">Внимание</string>
@@ -9,7 +9,7 @@
     <string name="toolbar_title">perevod.io</string>
 
     <string name="home_screen_title">Сумма для оплаты</string>
-    <string name="home_screen_input_hint">0 ₽</string>
+    <string name="home_screen_input_hint">0</string>
     <string name="home_screen_btn_next">Продолжить</string>
 
     <string name="payment_success_screen_print">Распечатать чек</string>

@@ -28,6 +28,7 @@ interface ApiService {
 
     @GET("payment/cashier/print")
     suspend fun printReceipt(
-        @Query("type") type: String
+        @Query("type") type: String,
+        @Query("orderUuid") orderUuid: String,
     ): Response<PrintModel>
 }

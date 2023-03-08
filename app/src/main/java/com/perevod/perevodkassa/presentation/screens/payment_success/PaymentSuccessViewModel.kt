@@ -46,6 +46,8 @@ class PaymentSuccessViewModel(
                 is PaymentSuccessIntent.PrintReceipt -> printReceipt()
                 is PaymentSuccessIntent.ShowQrCode -> showQrCode()
                 is PaymentSuccessIntent.OnBackPressed -> onBackPressed()
+                is PaymentSuccessIntent.ShowErrorScreen -> showErrorScreen(intent.message)
+                is PaymentSuccessIntent.ShowSuccessScreen -> showSuccessScreen(intent.message)
             }
         }.launchIn(viewModelScope)
     }
@@ -53,7 +55,12 @@ class PaymentSuccessViewModel(
     private fun printReceipt() {
         _viewState.value = PaymentSuccessViewState.ShowLoading
         viewModelScope.launch {
-            when (val result = getPrintDataUseCase(PrintType.Print)) {
+            when (val result = getPrintDataUseCase(
+                GetPrintDataUseCase.Params(
+                    PrintType.Print,
+                    prefs.lastOrderUuid ?: ""
+                )
+            )) {
                 is PaymentSuccessViewState.SuccessPrintReceipt -> {
                     _viewState.value = PaymentSuccessViewState.SuccessPrintReceipt(result.printModel)
                 }
@@ -67,7 +74,12 @@ class PaymentSuccessViewModel(
     private fun showQrCode() {
         _viewState.value = PaymentSuccessViewState.ShowLoading
         viewModelScope.launch {
-            when (val result = getPrintDataUseCase(PrintType.Qr)) {
+            when (val result = getPrintDataUseCase(
+                GetPrintDataUseCase.Params(
+                    PrintType.Qr,
+                    prefs.lastOrderUuid ?: ""
+                )
+            )) {
                 is PaymentSuccessViewState.SuccessPrintReceipt -> {
                     val qrBitmap = createBarCode(result.printModel.screenPrint)
                     _viewState.value = PaymentSuccessViewState.ShowQrCode(qrBitmap)
@@ -87,6 +99,14 @@ class PaymentSuccessViewModel(
         val multiFormatWriter = MultiFormatWriter()
         val bitMatrix = multiFormatWriter.encode(screenPrint, BarcodeFormat.QR_CODE, 340.dpToPx, 340.dpToPx)
         return createQrBitmap(bitMatrix)
+    }
+
+    private fun showErrorScreen(message: String) {
+        router.replaceScreen(Screens.errorMessageScreen(message))
+    }
+
+    private fun showSuccessScreen(message: String) {
+        router.replaceScreen(Screens.successMessageScreen(message))
     }
 
     override fun onBackPressed() {

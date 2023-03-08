@@ -26,8 +26,16 @@ class HomeRepositoryImpl(
             is Request.Error -> HomeViewState.Error(message = result.exception.message)
         }
 
-    override suspend fun printReceipt(printType: PrintType): PaymentSuccessViewState<Any> =
-        when (val result = makeRequest { api.printReceipt(printType.value) }) {
+    override suspend fun printReceipt(
+        printType: PrintType,
+        orderUuid: String
+    ): PaymentSuccessViewState<Any> =
+        when (val result = makeRequest {
+            api.printReceipt(
+                printType.value,
+                orderUuid
+            )
+        }) {
             is Request.Success -> PaymentSuccessViewState.SuccessPrintReceipt(result.data)
             is Request.Error -> PaymentSuccessViewState.Error(message = result.exception.message)
         }

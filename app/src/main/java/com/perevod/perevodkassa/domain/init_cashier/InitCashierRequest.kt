@@ -3,7 +3,7 @@ package com.perevod.perevodkassa.domain.init_cashier
 import com.google.gson.annotations.SerializedName
 
 data class InitCashierRequest(
-    val amount: Float,
+    val amount: String,
     val currency: String,
     val payload: Payload
 )

@@ -29,7 +29,7 @@ object AppRequestInterceptor : Interceptor, KoinComponent {
             .addHeader("SDK-API-Key", "${prefs.sdkKey}")
 
         if (BuildConfig.DEBUG) {
-            Timber.tag("REQUEST_HEADER_SDK_KEY_PRINT").e(prefs.sdkKey)
+            Timber.tag("REQUEST_HEADER_SDK_KEY_PRINT").d("Header: ${prefs.sdkKey}")
         }
 
         return chain.proceed(requestBuilder.build())

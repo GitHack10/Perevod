@@ -1,9 +1,10 @@
 package com.perevod.perevodkassa.di
 
 import com.perevod.perevodkassa.data.repository.MainRepository
-import com.perevod.perevodkassa.domain.interactor.HomeInteractor
 import com.perevod.perevodkassa.domain.repositoryimpl.HomeRepositoryImpl
+import com.perevod.perevodkassa.domain.use_case.ConnectCashierUseCase
 import com.perevod.perevodkassa.domain.use_case.GetPrintDataUseCase
+import com.perevod.perevodkassa.domain.use_case.InitCashierUseCase
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
@@ -13,13 +14,17 @@ import org.koin.dsl.module
 val domainModule = module {
 
     factory {
-        HomeInteractor(
+        GetPrintDataUseCase(get())
+    }
+
+    factory {
+        ConnectCashierUseCase(
             get(), androidContext()
         )
     }
 
     factory {
-        GetPrintDataUseCase(get())
+        InitCashierUseCase(get())
     }
 
     factory<MainRepository> { HomeRepositoryImpl(get()) }

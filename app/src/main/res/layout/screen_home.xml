@@ -16,7 +16,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="32dp"
-        android:layout_marginTop="84dp"
+        android:layout_marginTop="24dp"
         android:fontFamily="sans-serif-medium"
         android:text="@string/home_screen_title"
         android:textColor="@color/white"
@@ -31,7 +31,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="32dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="24dp"
         android:background="@drawable/background_rounded_stroke_24"
         android:orientation="horizontal"
         android:paddingHorizontal="12dp"
@@ -42,16 +42,21 @@
         app:layout_constraintTop_toBottomOf="@+id/tvTitle"
         app:layout_constraintWidth_max="@dimen/one_column_tablet_width">
 
-        <TextView
-            android:id="@+id/tvAmount"
+        <EditText
+            android:id="@+id/etAmount"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:layout_weight="1"
+            android:background="@null"
+            android:digits="0123456789."
             android:gravity="start"
+            android:hint="@string/home_screen_input_hint"
+            android:inputType="numberDecimal"
             android:maxLines="1"
-            android:text="@string/home_screen_input_hint"
-            android:textColor="@color/white_67"
+            android:maxLength="12"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white_67"
             android:textSize="@dimen/text_size_64"
             tools:text="0" />
 
@@ -60,8 +65,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
-            android:layout_marginStart="8dp"
-            android:paddingHorizontal="12dp"
+            android:paddingHorizontal="16dp"
             app:srcCompat="@drawable/ic_svg_delete"
             app:tint="@color/white_67" />
 
@@ -71,15 +75,16 @@
         android:id="@+id/btnNext"
         style="@style/PrimaryButtonStyle"
         android:layout_width="0dp"
-        android:layout_height="100dp"
+        android:layout_height="90dp"
         android:layout_marginHorizontal="32dp"
         android:layout_marginTop="24dp"
         android:background="@drawable/transition_btn_primary"
         android:clickable="false"
         android:enabled="false"
         android:text="@string/home_screen_btn_next"
-        android:textSize="20sp"
+        android:textSize="24sp"
         app:backgroundTint="@null"
+        app:layout_constraintBottom_toTopOf="@+id/glKeyboard"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/llInputAmount"
@@ -87,8 +92,9 @@
         app:layout_constraintWidth_max="@dimen/one_column_tablet_width" />
 
     <GridLayout
+        android:id="@+id/glKeyboard"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginHorizontal="32dp"
         android:layout_marginVertical="32dp"
         android:columnCount="3"
@@ -110,7 +116,7 @@
             android:layout_marginEnd="12dp"
             android:background="@drawable/bg_rounded_24_white_20"
             android:gravity="center"
-            android:paddingVertical="16dp"
+            android:paddingVertical="12dp"
             android:text="1"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_64" />
@@ -124,7 +130,7 @@
             android:layout_marginHorizontal="12dp"
             android:background="@drawable/bg_rounded_24_white_20"
             android:gravity="center"
-            android:paddingVertical="16dp"
+            android:paddingVertical="12dp"
             android:text="2"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_64" />
@@ -138,7 +144,7 @@
             android:layout_marginStart="12dp"
             android:background="@drawable/bg_rounded_24_white_20"
             android:gravity="center"
-            android:paddingVertical="16dp"
+            android:paddingVertical="12dp"
             android:text="3"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_64" />
@@ -154,7 +160,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="12dp"
             android:gravity="center"
-            android:paddingVertical="16dp"
+            android:paddingVertical="12dp"
             android:text="4"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_64"
@@ -170,7 +176,7 @@
             android:layout_marginTop="16dp"
             android:background="@drawable/bg_rounded_24_white_20"
             android:gravity="center"
-            android:paddingVertical="16dp"
+            android:paddingVertical="12dp"
             android:text="5"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_64" />
@@ -185,7 +191,7 @@
             android:layout_marginTop="16dp"
             android:background="@drawable/bg_rounded_24_white_20"
             android:gravity="center"
-            android:paddingVertical="16dp"
+            android:paddingVertical="12dp"
             android:text="6"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_64" />
@@ -202,7 +208,7 @@
             android:layout_marginEnd="12dp"
             android:background="@drawable/bg_rounded_24_white_20"
             android:gravity="center"
-            android:paddingVertical="16dp"
+            android:paddingVertical="12dp"
             android:text="7"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_64" />
@@ -217,7 +223,7 @@
             android:layout_marginTop="16dp"
             android:background="@drawable/bg_rounded_24_white_20"
             android:gravity="center"
-            android:paddingVertical="16dp"
+            android:paddingVertical="12dp"
             android:text="8"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_64" />
@@ -232,7 +238,7 @@
             android:layout_marginTop="16dp"
             android:background="@drawable/bg_rounded_24_white_20"
             android:gravity="center"
-            android:paddingVertical="16dp"
+            android:paddingVertical="12dp"
             android:text="9"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_64" />
@@ -249,7 +255,7 @@
             android:layout_marginEnd="12dp"
             android:background="@drawable/bg_rounded_24_white_20"
             android:gravity="center"
-            android:paddingVertical="16dp"
+            android:paddingVertical="12dp"
             android:text="."
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_64" />
@@ -264,7 +270,7 @@
             android:layout_marginTop="16dp"
             android:background="@drawable/bg_rounded_24_white_20"
             android:gravity="center"
-            android:paddingVertical="16dp"
+            android:paddingVertical="12dp"
             android:text="0"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_64" />
@@ -282,8 +288,7 @@
         android:focusable="true"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/homeToolbar"
-        tools:visibility="gone">
+        app:layout_constraintTop_toBottomOf="@+id/homeToolbar">
 
         <ProgressBar
             android:layout_width="wrap_content"

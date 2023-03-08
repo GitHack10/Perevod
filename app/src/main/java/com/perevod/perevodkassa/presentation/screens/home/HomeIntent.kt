@@ -5,10 +5,11 @@ sealed class HomeIntent {
     object OnBackPressed : HomeIntent()
 
     data class OnAmountChanged(
-        val inputText: KeyboardNumber
+        val inputText: String,
+        val keyNumber: KeyboardNumber
     ) : HomeIntent()
 
-    data class GoToPaymentSuccessScreen(val amount: Int) : HomeIntent()
+    data class GoToPaymentSuccessScreen(val amount: Float) : HomeIntent()
 
     object OnButtonDoneClick : HomeIntent()
 }

@@ -18,6 +18,10 @@ import com.perevod.perevodkassa.presentation.global.BaseFragment
 import com.perevod.perevodkassa.presentation.global.extensions.getFormattedPrice
 import com.perevod.perevodkassa.presentation.global.extensions.launchWhenStarted
 import com.perevod.perevodkassa.presentation.global.extensions.onDelayedClick
+import com.perevod.perevodkassa.utils.createHorizontalGradient
+import com.perevod.perevodkassa.utils.createRoundedRippleDrawable
+import com.perevod.perevodkassa.utils.dpToPx
+import com.perevod.perevodkassa.utils.resColor
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.onEach
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -34,7 +38,6 @@ class PaymentSuccessFragment : BaseFragment(R.layout.screen_payment_success) {
     private var dialogError: Dialog? = null
     private var dialogErrorTextView: MaterialTextView? = null
     private var fptrServiceBinder: IFptrService? = null
-    private var currentAmount: Int = 0
 
     private val viewBinding: ScreenPaymentSuccessBinding by viewBinding()
     private val viewModel: PaymentSuccessViewModel by viewModel()
@@ -94,12 +97,12 @@ class PaymentSuccessFragment : BaseFragment(R.layout.screen_payment_success) {
     }
 
     private fun showQrCode(qrBitmap: Bitmap?) {
-        val currentAmount = (arguments?.getInt(EXTRA_AMOUNT, 0) ?: 0).getFormattedPrice()
+        val currentAmount = (arguments?.getFloat(EXTRA_AMOUNT, 0f) ?: 0f)
         with(viewBinding) {
             ivQrCode.setImageBitmap(qrBitmap)
             tvAmountTitle.text = getString(
                 R.string.payment_success_screen_amount_title,
-                currentAmount
+                currentAmount.getFormattedPrice()
             )
         }
     }
@@ -114,12 +117,7 @@ class PaymentSuccessFragment : BaseFragment(R.layout.screen_payment_success) {
 
     private fun showError(message: String) {
         hideLoading()
-        lifecycleScope.launchWhenStarted {
-            dialogErrorTextView?.text = message
-            dialogError?.show()
-            delay(2000)
-            dialogError?.dismiss()
-        }
+        viewModel.userIntent.tryEmit(PaymentSuccessIntent.ShowErrorScreen(message))
     }
 
     private fun initSuccessDialog() {
@@ -146,9 +144,22 @@ class PaymentSuccessFragment : BaseFragment(R.layout.screen_payment_success) {
 
     private fun initButtonListeners() {
         with(viewBinding) {
+            btnGoBack.background = createRoundedRippleDrawable(
+                resColor(R.color.ripple_primary),
+                24.dpToPx.toFloat(),
+                resColor(R.color.grey_4D4D4D)
+            )
             btnGoBack.onDelayedClick {
                 viewModel.userIntent.tryEmit(PaymentSuccessIntent.OnBackPressed)
             }
+            btnPrintQr.background = createRoundedRippleDrawable(
+                resColor(R.color.ripple_primary),
+                24.dpToPx.toFloat(),
+                createHorizontalGradient(
+                    resColor(R.color.gradient_start),
+                    resColor(R.color.gradient_end),
+                )
+            )
             btnPrintQr.onDelayedClick {
                 viewModel.userIntent.tryEmit(PaymentSuccessIntent.PrintReceipt)
             }

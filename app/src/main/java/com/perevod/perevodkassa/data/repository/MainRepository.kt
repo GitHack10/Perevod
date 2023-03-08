@@ -10,5 +10,8 @@ interface MainRepository {
 
     suspend fun connectCashier(request: ConnectCashierRequest): HomeViewState<Any>
     suspend fun initCashier(request: InitCashierRequest): HomeViewState<Any>
-    suspend fun printReceipt(printType: PrintType): PaymentSuccessViewState<Any>
+    suspend fun printReceipt(
+        printType: PrintType,
+        orderUuid: String,
+    ): PaymentSuccessViewState<Any>
 }

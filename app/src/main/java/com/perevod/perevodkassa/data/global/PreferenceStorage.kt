@@ -14,6 +14,7 @@ interface PreferenceStorage {
     var isFirstLaunch: Boolean
     var isLogged: Boolean
     var sdkKey: String?
+    var lastOrderUuid: String?
 }
 
 class SharedPreferenceStorage(context: Context) : PreferenceStorage {
@@ -28,11 +29,14 @@ class SharedPreferenceStorage(context: Context) : PreferenceStorage {
 
     override var sdkKey by StringPreference(prefs, PREF_SDK_KEY, null)
 
+    override var lastOrderUuid by StringPreference(prefs, PREF_LAST_ORDER_UUID, null)
+
     companion object {
         const val PREF_NAME = "SHARED_PREFERENCES_FILE_COMMON"
         const val PREF_FIRST_LAUNCH = "PREF_FIRST_LAUNCH"
         const val PREF_IS_LOGGED = "PREF_IS_LOGGED"
         const val PREF_SDK_KEY = "PREF_SDK_KEY"
+        const val PREF_LAST_ORDER_UUID = "PREF_LAST_ORDER_UUID"
     }
 }
 

@@ -12,6 +12,7 @@ import com.perevod.perevodkassa.databinding.ScreenHomeBinding
 import com.perevod.perevodkassa.presentation.global.BaseFragment
 import com.perevod.perevodkassa.presentation.global.extensions.launchWhenStarted
 import com.perevod.perevodkassa.presentation.global.extensions.onDelayedClick
+import com.perevod.perevodkassa.presentation.global.extensions.text
 import com.perevod.perevodkassa.utils.DebouncingQueryTextListener
 import com.perevod.perevodkassa.utils.resColor
 import kotlinx.coroutines.delay
@@ -38,7 +39,7 @@ class HomeFragment : BaseFragment(R.layout.screen_home) {
         initErrorDialog()
         initButtonNext()
         initKeyboardButtons()
-        showKeyboard()
+        hideKeyboard()
     }
 
     override fun setupViewModel() {
@@ -92,40 +93,40 @@ class HomeFragment : BaseFragment(R.layout.screen_home) {
     private fun initKeyboardButtons() {
         with(viewBinding) {
             tvNum1.setOnClickListener {
-                viewModel.userIntent.tryEmit(HomeIntent.OnAmountChanged(KeyboardNumber.One))
+                viewModel.userIntent.tryEmit(HomeIntent.OnAmountChanged(etAmount.text(), KeyboardNumber.One))
             }
             tvNum2.setOnClickListener {
-                viewModel.userIntent.tryEmit(HomeIntent.OnAmountChanged(KeyboardNumber.Two))
+                viewModel.userIntent.tryEmit(HomeIntent.OnAmountChanged(etAmount.text(), KeyboardNumber.Two))
             }
             tvNum3.setOnClickListener {
-                viewModel.userIntent.tryEmit(HomeIntent.OnAmountChanged(KeyboardNumber.Three))
+                viewModel.userIntent.tryEmit(HomeIntent.OnAmountChanged(etAmount.text(), KeyboardNumber.Three))
             }
             tvNum4.setOnClickListener {
-                viewModel.userIntent.tryEmit(HomeIntent.OnAmountChanged(KeyboardNumber.Four))
+                viewModel.userIntent.tryEmit(HomeIntent.OnAmountChanged(etAmount.text(), KeyboardNumber.Four))
             }
             tvNum5.setOnClickListener {
-                viewModel.userIntent.tryEmit(HomeIntent.OnAmountChanged(KeyboardNumber.Five))
+                viewModel.userIntent.tryEmit(HomeIntent.OnAmountChanged(etAmount.text(), KeyboardNumber.Five))
             }
             tvNum6.setOnClickListener {
-                viewModel.userIntent.tryEmit(HomeIntent.OnAmountChanged(KeyboardNumber.Six))
+                viewModel.userIntent.tryEmit(HomeIntent.OnAmountChanged(etAmount.text(), KeyboardNumber.Six))
             }
             tvNum7.setOnClickListener {
-                viewModel.userIntent.tryEmit(HomeIntent.OnAmountChanged(KeyboardNumber.Seven))
+                viewModel.userIntent.tryEmit(HomeIntent.OnAmountChanged(etAmount.text(), KeyboardNumber.Seven))
             }
             tvNum8.setOnClickListener {
-                viewModel.userIntent.tryEmit(HomeIntent.OnAmountChanged(KeyboardNumber.Eight))
+                viewModel.userIntent.tryEmit(HomeIntent.OnAmountChanged(etAmount.text(), KeyboardNumber.Eight))
             }
             tvNum9.setOnClickListener {
-                viewModel.userIntent.tryEmit(HomeIntent.OnAmountChanged(KeyboardNumber.Nine))
-            }
-            tvNumDot.setOnClickListener {
-                viewModel.userIntent.tryEmit(HomeIntent.OnAmountChanged(KeyboardNumber.Dot))
+                viewModel.userIntent.tryEmit(HomeIntent.OnAmountChanged(etAmount.text(), KeyboardNumber.Nine))
             }
             tvNum0.setOnClickListener {
-                viewModel.userIntent.tryEmit(HomeIntent.OnAmountChanged(KeyboardNumber.Zero))
+                viewModel.userIntent.tryEmit(HomeIntent.OnAmountChanged(etAmount.text(), KeyboardNumber.Zero))
+            }
+            tvNumDot.setOnClickListener {
+                viewModel.userIntent.tryEmit(HomeIntent.OnAmountChanged(etAmount.text(), KeyboardNumber.Dot))
             }
             ivDelete.setOnClickListener {
-                viewModel.userIntent.tryEmit(HomeIntent.OnAmountChanged(KeyboardNumber.Delete))
+                viewModel.userIntent.tryEmit(HomeIntent.OnAmountChanged(etAmount.text(), KeyboardNumber.Delete))
             }
         }
     }
@@ -149,10 +150,16 @@ class HomeFragment : BaseFragment(R.layout.screen_home) {
     }
 
     private fun fetchInputAmount(amount: String, btnEnabled: Boolean) {
-        viewBinding.tvAmount.text = getString(
-            R.string.item_price,
+        val withCurrency = (amount.toFloatOrNull() ?: 0f) > 0f
+        val amountString = if (withCurrency) {
+            getString(
+                R.string.item_price,
+                amount,
+            )
+        } else {
             amount
-        )
+        }
+        viewBinding.etAmount.setText(amountString)
         updateButtonEnabledState(btnEnabled)
     }
 
@@ -182,8 +189,13 @@ class HomeFragment : BaseFragment(R.layout.screen_home) {
             } else {
                 R.color.white_67
             }
-            tvAmount.setTextColor(resColor(color))
+            etAmount.setTextColor(resColor(color))
             ivDelete.imageTintList = ColorStateList.valueOf(resColor(color))
+            llInputAmount.backgroundTintList = if (transitionAnimState.isStart) {
+                ColorStateList.valueOf(resColor(R.color.white_67))
+            } else {
+                null
+            }
         }
     }
 

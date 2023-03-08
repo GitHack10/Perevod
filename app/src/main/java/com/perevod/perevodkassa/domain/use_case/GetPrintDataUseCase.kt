@@ -6,7 +6,15 @@ class GetPrintDataUseCase(
     private val repository: MainRepository
 ) {
 
-    suspend operator fun invoke(printType: PrintType) = repository.printReceipt(printType)
+    suspend operator fun invoke(input: Params) = repository.printReceipt(
+        input.printType,
+        input.orderUuid,
+    )
+
+    class Params(
+        val printType: PrintType,
+        val orderUuid: String,
+    )
 }
 
 enum class PrintType(val value: String) {

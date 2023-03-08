@@ -10,7 +10,7 @@
         <item name="colorSecondaryVariant">@color/teal_700</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor">@color/black</item>
         <!-- Customize your theme here. -->
     </style>
 
@@ -80,7 +80,7 @@
         <item name="cornerRadius">24dp</item>
         <item name="android:textAppearance">@style/PrimaryButtonText</item>
         <item name="android:elevation">0dp</item>
-        <item name="rippleColor">@color/transparent_black_25</item>
+        <item name="rippleColor">@color/ripple_primary</item>
     </style>
 
     <style name="PrimaryButtonText" parent="TextAppearance.AppCompat">

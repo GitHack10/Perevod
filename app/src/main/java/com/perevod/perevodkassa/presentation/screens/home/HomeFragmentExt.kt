@@ -3,6 +3,7 @@ package com.perevod.perevodkassa.presentation.screens.home
 import android.widget.TextView
 import com.perevod.perevodkassa.R
 import com.perevod.perevodkassa.databinding.ScreenHomeBinding
+import com.perevod.perevodkassa.utils.createCircleRippleDrawable
 import com.perevod.perevodkassa.utils.createRoundedDrawable
 import com.perevod.perevodkassa.utils.createRoundedRippleDrawable
 import com.perevod.perevodkassa.utils.dpToPx
@@ -20,6 +21,14 @@ fun ScreenHomeBinding.init() {
     tvNum9.setRoundedRippleDrawable()
     tvNumDot.setRoundedRippleDrawable()
     tvNum0.setRoundedRippleDrawable()
+    with(etAmount) {
+        isCursorVisible = false
+        isClickable = false
+        isFocusable = false
+    }
+    ivDelete.background = createCircleRippleDrawable(
+        root.context.resColor(R.color.ripple_primary)
+    )
 }
 
 private fun TextView.setRoundedRippleDrawable() {
