@@ -12,7 +12,7 @@
         android:layout_height="100dp"
         android:layout_gravity="center"
         android:layout_margin="32dp"
-        app:srcCompat="@drawable/ic_svg_done" />
+        app:srcCompat="@drawable/ic_svg_success" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/successTextView"

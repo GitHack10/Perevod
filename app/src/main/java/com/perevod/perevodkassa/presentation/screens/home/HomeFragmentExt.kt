@@ -34,9 +34,9 @@ fun ScreenHomeBinding.init() {
 private fun TextView.setRoundedRippleDrawable() {
     background = createRoundedRippleDrawable(
         context.resColor(R.color.ripple_primary),
-        24.dpToPx.toFloat(),
+        24f,
         createRoundedDrawable(
-            24.dpToPx.toFloat(),
+            24f,
             context.resColor(R.color.white_20),
         )
     )

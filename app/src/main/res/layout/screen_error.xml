@@ -13,8 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="32dp"
-        app:srcCompat="@drawable/ic_launcher_foreground"
-        app:tint="@color/colorAccent" />
+        app:srcCompat="@drawable/ic_svg_error" />
 
     <com.google.android.material.textview.MaterialTextView
         android:layout_width="match_parent"

@@ -22,6 +22,7 @@ import com.perevod.perevodkassa.utils.createHorizontalGradient
 import com.perevod.perevodkassa.utils.createRoundedRippleDrawable
 import com.perevod.perevodkassa.utils.dpToPx
 import com.perevod.perevodkassa.utils.resColor
+import com.perevod.perevodkassa.utils.roundAllCorners
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.onEach
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -154,12 +155,13 @@ class PaymentSuccessFragment : BaseFragment(R.layout.screen_payment_success) {
             }
             btnPrintQr.background = createRoundedRippleDrawable(
                 resColor(R.color.ripple_primary),
-                24.dpToPx.toFloat(),
+                24f,
                 createHorizontalGradient(
                     resColor(R.color.gradient_start),
                     resColor(R.color.gradient_end),
                 )
             )
+            btnPrintQr.roundAllCorners(24)
             btnPrintQr.onDelayedClick {
                 viewModel.userIntent.tryEmit(PaymentSuccessIntent.PrintReceipt)
             }

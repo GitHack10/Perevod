@@ -3,6 +3,7 @@ package com.perevod.perevodkassa.utils
 import android.content.res.ColorStateList
 import android.graphics.CornerPathEffect
 import android.graphics.LinearGradient
+import android.graphics.Outline
 import android.graphics.Paint
 import android.graphics.Shader
 import android.graphics.drawable.Drawable
@@ -13,6 +14,7 @@ import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.OvalShape
 import android.graphics.drawable.shapes.RectShape
 import android.view.View
+import android.view.ViewOutlineProvider
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import com.google.android.material.shape.MaterialShapeDrawable
@@ -181,4 +183,14 @@ fun View.setHorizontalGradientBackground(
                 )
         }
     }
+}
+
+fun View.roundAllCorners(radiusDp: Int) {
+    outlineProvider = object : ViewOutlineProvider() {
+        override fun getOutline(view: View, outline: Outline) {
+            val radius = radiusDp.dpToPx
+            outline.setRoundRect(0, 0, view.measuredWidth, view.measuredHeight, radius.toFloat())
+        }
+    }
+    clipToOutline = true
 }

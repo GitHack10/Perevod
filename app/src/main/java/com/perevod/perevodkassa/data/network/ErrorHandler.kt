@@ -1,6 +1,7 @@
 package com.perevod.perevodkassa.data.network
 
 import com.perevod.perevodkassa.data.global.ErrorModel
+import okhttp3.ResponseBody
 import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.HttpException
@@ -23,18 +24,16 @@ fun Throwable.handlerErrors(): ErrorModel =
         }
     }
 
-fun <T> Response<T>.handleErrors() = ErrorModel.Error(specificMessage = message(), code = code())
+fun <T> Response<T>.handleErrors(): ErrorModel = errorBody()?.getErrorModel(code())
+    ?: ErrorModel.Error(message(), code())
 
-fun HttpException.getHttpError(): ErrorModel {
+fun HttpException.getHttpError(): ErrorModel = response()?.errorBody()?.getErrorModel(code())
+    ?: ErrorModel.Error(message(), code())
 
-    val errorBody = try {
-        response()?.errorBody()!!.string()
-    } catch (e: Exception) {
-        ""
-    }
+fun ResponseBody.getErrorModel(errorCode: Int): ErrorModel {
 
     val jsnObj = try {
-        JSONObject(errorBody)
+        JSONObject(this.string())
     } catch (e: JSONException) {
         return ErrorModel.ServerError
     }
@@ -69,7 +68,7 @@ fun HttpException.getHttpError(): ErrorModel {
         }.toString()
 
 
-        when (code()) {
+        when (errorCode) {
             401 -> ErrorModel.Unauthorized
             400 -> ErrorModel.SpecificError(specificError)
             502 -> ErrorModel.TimeOut
