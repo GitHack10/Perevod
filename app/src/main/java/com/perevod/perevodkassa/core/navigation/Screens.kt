@@ -1,4 +1,4 @@
-package com.perevod.perevodkassa.presentation.global.navigation
+package com.perevod.perevodkassa.core.navigation
 
 import com.github.terrakok.cicerone.androidx.FragmentScreen
 import com.perevod.perevodkassa.presentation.screens.home.HomeFragment

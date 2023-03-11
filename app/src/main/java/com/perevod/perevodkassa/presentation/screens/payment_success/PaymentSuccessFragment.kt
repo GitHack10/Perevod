@@ -7,20 +7,28 @@ import android.content.ServiceConnection
 import android.graphics.Bitmap
 import android.os.IBinder
 import android.os.RemoteException
+import android.text.style.ForegroundColorSpan
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatImageView
+import androidx.core.text.buildSpannedString
+import androidx.core.text.inSpans
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.textview.MaterialTextView
 import com.perevod.perevodkassa.R
+import com.perevod.perevodkassa.core.arch.BaseFragment
 import com.perevod.perevodkassa.databinding.ScreenPaymentSuccessBinding
-import com.perevod.perevodkassa.presentation.global.BaseFragment
+import com.perevod.perevodkassa.presentation.global.extensions.dialogBuild
 import com.perevod.perevodkassa.presentation.global.extensions.getFormattedPrice
 import com.perevod.perevodkassa.presentation.global.extensions.launchWhenStarted
 import com.perevod.perevodkassa.presentation.global.extensions.onDelayedClick
+import com.perevod.perevodkassa.utils.createCircleDrawable
 import com.perevod.perevodkassa.utils.createHorizontalGradient
 import com.perevod.perevodkassa.utils.createRoundedRippleDrawable
 import com.perevod.perevodkassa.utils.dpToPx
+import com.perevod.perevodkassa.utils.hideSystemUI
 import com.perevod.perevodkassa.utils.resColor
 import com.perevod.perevodkassa.utils.roundAllCorners
 import kotlinx.coroutines.delay
@@ -73,8 +81,11 @@ class PaymentSuccessFragment : BaseFragment(R.layout.screen_payment_success) {
                 is PaymentSuccessViewState.ShowLoading -> showLoading()
                 is PaymentSuccessViewState.HideLoading -> hideLoading()
                 is PaymentSuccessViewState.Error -> showError(viewState.message)
-                is PaymentSuccessViewState.SuccessPrintReceipt -> printSlip(viewState.printModel.paperPrint)
+                is PaymentSuccessViewState.PaymentError -> showPaymentError(viewState.message)
+                is PaymentSuccessViewState.PaymentSuccess -> showPaymentSuccess(viewState.message)
+                is PaymentSuccessViewState.SuccessPrintOrShowQr -> printSlip(viewState.printModel.paperPrint)
                 is PaymentSuccessViewState.ShowQrCode -> showQrCode(viewState.qrBitmap)
+                is PaymentSuccessViewState.OnUpdatePaymentStatus -> onUpdatePaymentStatus(viewState.paymentEvent.message)
             }
         }.launchWhenStarted(lifecycleScope)
     }
@@ -105,6 +116,7 @@ class PaymentSuccessFragment : BaseFragment(R.layout.screen_payment_success) {
                 R.string.payment_success_screen_amount_title,
                 currentAmount.getFormattedPrice()
             )
+            onUpdatePaymentStatus(getString(R.string.payment_success_screen_order_status_default))
         }
     }
 
@@ -118,28 +130,53 @@ class PaymentSuccessFragment : BaseFragment(R.layout.screen_payment_success) {
 
     private fun showError(message: String) {
         hideLoading()
+        lifecycleScope.launchWhenStarted {
+            dialogErrorTextView?.text = message
+            dialogError?.show()
+            delay(2000)
+            dialogError?.dismiss()
+            activity?.window?.hideSystemUI()
+        }
+    }
+
+    private fun onUpdatePaymentStatus(statusMessage: String) {
+        with(viewBinding.tvOrderStatus) {
+            text = buildSpannedString {
+                append(getString(R.string.payment_success_screen_order_status))
+                append(" ")
+                inSpans(ForegroundColorSpan(resColor(R.color.golden_tainoi))) {
+                    append(statusMessage)
+                }
+            }
+        }
+        Log.d("PaymentSuccess_STATUS", statusMessage)
+    }
+
+    private fun showPaymentError(message: String) {
+        hideLoading()
         viewModel.userIntent.tryEmit(PaymentSuccessIntent.ShowErrorScreen(message))
+    }
+
+    private fun showPaymentSuccess(message: String) {
+        hideLoading()
+        viewModel.userIntent.tryEmit(PaymentSuccessIntent.ShowSuccessScreen(message))
     }
 
     private fun initSuccessDialog() {
         val dialogView = layoutInflater.inflate(R.layout.screen_success, null)
-        dialogSuccess = Dialog(requireContext(), R.style.RoundedDialogStyle)
-            .apply {
-                setCancelable(false)
-                setContentView(dialogView)
-                create()
-            }
+        dialogView.roundAllCorners(24)
+        dialogView.findViewById<AppCompatImageView>(R.id.successImageView).background = createCircleDrawable(
+            resColor(R.color.white_10)
+        )
+        dialogSuccess = requireContext().dialogBuild(dialogView)
     }
 
     private fun initErrorDialog() {
         val dialogView = layoutInflater.inflate(R.layout.screen_error, null)
-        dialogError = Dialog(requireContext(), R.style.RoundedDialogStyle)
-            .apply {
-                setCancelable(false)
-                setContentView(dialogView)
-                create()
-            }
-
+        dialogView.findViewById<AppCompatImageView>(R.id.errorImageView).background = createCircleDrawable(
+            resColor(R.color.white_10)
+        )
+        dialogError = requireContext().dialogBuild(dialogView)
         dialogErrorTextView = dialogView.findViewById(R.id.errorTextView)
     }
 

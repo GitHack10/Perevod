@@ -1,4 +1,4 @@
-package com.perevod.perevodkassa.presentation.global
+package com.perevod.perevodkassa.core.arch
 
 import android.app.Activity
 import android.content.Context

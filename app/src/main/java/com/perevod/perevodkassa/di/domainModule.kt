@@ -1,5 +1,6 @@
 package com.perevod.perevodkassa.di
 
+import com.perevod.perevodkassa.domain.use_case.SubscribeToPaymentEventsUseCase
 import com.perevod.perevodkassa.data.repository.MainRepository
 import com.perevod.perevodkassa.domain.repositoryimpl.HomeRepositoryImpl
 import com.perevod.perevodkassa.domain.use_case.ConnectCashierUseCase
@@ -27,5 +28,11 @@ val domainModule = module {
         InitCashierUseCase(get())
     }
 
-    factory<MainRepository> { HomeRepositoryImpl(get()) }
+    factory<MainRepository> {
+        HomeRepositoryImpl(
+            get(), get()
+        )
+    }
+
+    factory { SubscribeToPaymentEventsUseCase(get()) }
 }

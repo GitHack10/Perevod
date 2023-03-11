@@ -20,7 +20,7 @@ val viewModelModule = module {
     viewModel {
         PaymentSuccessViewModel(
             get(), get(),
-            get(),
+            get(), get(),
         )
     }
 }

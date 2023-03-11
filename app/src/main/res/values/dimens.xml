@@ -15,7 +15,7 @@
     <dimen name="text_size_10">10sp</dimen>
     <dimen name="text_size_8">8sp</dimen>
 
-    <dimen name="one_column_tablet_width">700dp</dimen>
+    <dimen name="one_column_tablet_width">600dp</dimen>
     <dimen name="one_column_tablet_height">900dp</dimen>
 
 </resources>

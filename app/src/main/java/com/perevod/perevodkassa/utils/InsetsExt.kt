@@ -1,9 +1,13 @@
 package com.perevod.perevodkassa.utils
 
 import android.view.View
+import android.view.Window
+import android.view.WindowInsetsController
 import androidx.core.graphics.Insets
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.doOnAttach
 
 val WindowInsetsCompat.statusBarInsets: Int
@@ -89,4 +93,24 @@ interface InsetsConsumer {
         insets: WindowInsetsCompat,
         bottomInsetsType: BottomInsetsType
     ): WindowInsetsCompat = insets
+}
+
+val Window.windowInsetsController: WindowInsetsControllerCompat
+    get() = WindowCompat.getInsetsController(this, decorView)
+
+fun WindowInsetsControllerCompat.hideSystemBars() = this.hide(WindowInsetsCompat.Type.systemBars())
+
+fun WindowInsetsControllerCompat.showSystemBars() = this.show(WindowInsetsCompat.Type.systemBars())
+
+fun Window.hideSystemUI() {
+    WindowCompat.setDecorFitsSystemWindows(this, false)
+    WindowInsetsControllerCompat(this, decorView).let { controller ->
+        controller.hide(WindowInsetsCompat.Type.systemBars())
+        controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+    }
+}
+
+fun Window.showSystemUI() {
+    WindowCompat.setDecorFitsSystemWindows(this, true)
+    WindowInsetsControllerCompat(this, this.decorView).show(WindowInsetsCompat.Type.systemBars())
 }

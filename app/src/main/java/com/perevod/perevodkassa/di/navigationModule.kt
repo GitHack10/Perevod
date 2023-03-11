@@ -1,7 +1,8 @@
 package com.perevod.perevodkassa.di
 
 import com.github.terrakok.cicerone.Cicerone
-import com.github.terrakok.cicerone.Router
+import com.perevod.perevodkassa.core.navigation.AppRouter
+import com.perevod.perevodkassa.core.navigation.CiceroneHolder
 import org.koin.dsl.module
 
 /**
@@ -9,8 +10,16 @@ import org.koin.dsl.module
  */
 val navigationModule = module {
 
-    val appRouter: Cicerone<Router> = Cicerone.create(Router())
+    single { CiceroneHolder() }
 
-    single { appRouter.router }
-    single { appRouter.getNavigatorHolder() }
+    single { Cicerone.create(AppRouter()) }
+
+    single {
+        val cicerone: Cicerone<AppRouter> = get()
+        cicerone.router
+    }
+    single {
+        val cicerone: Cicerone<AppRouter> = get()
+        cicerone.getNavigatorHolder()
+    }
 }

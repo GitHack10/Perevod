@@ -36,10 +36,19 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
             android:gravity="center"
-            android:text="@string/payment_success_screen_amount_title"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_32"
             tools:text="Сумма для оплаты: 150₽" />
+
+        <TextView
+            android:id="@+id/tvOrderStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_24"
+            tools:text="Статус платежа: В обработке" />
 
     </LinearLayout>
 

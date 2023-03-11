@@ -1,9 +1,11 @@
-package com.perevod.perevodkassa.presentation.global
+package com.perevod.perevodkassa.core.arch
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * Created by Kamil' Abdulatipov on 25/02/23.
@@ -19,6 +21,11 @@ abstract class BaseViewModel : ViewModel() {
             onAttach()
         }
     }
+
+    protected suspend fun runOnUi(block: suspend () -> Unit) =
+        withContext(Dispatchers.Main) {
+            block()
+        }
 
     open fun onAttach() {}
     open fun onBackPressed() {}

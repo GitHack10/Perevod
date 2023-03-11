@@ -3,18 +3,23 @@ package com.perevod.perevodkassa.presentation.screens.home
 import android.app.Dialog
 import android.content.res.ColorStateList
 import android.graphics.drawable.TransitionDrawable
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.textview.MaterialTextView
 import com.perevod.perevodkassa.R
+import com.perevod.perevodkassa.core.arch.BaseFragment
 import com.perevod.perevodkassa.databinding.ScreenHomeBinding
-import com.perevod.perevodkassa.presentation.global.BaseFragment
+import com.perevod.perevodkassa.presentation.global.extensions.dialogBuild
 import com.perevod.perevodkassa.presentation.global.extensions.launchWhenStarted
 import com.perevod.perevodkassa.presentation.global.extensions.onDelayedClick
 import com.perevod.perevodkassa.presentation.global.extensions.text
 import com.perevod.perevodkassa.utils.DebouncingQueryTextListener
+import com.perevod.perevodkassa.utils.createCircleDrawable
+import com.perevod.perevodkassa.utils.hideSystemUI
 import com.perevod.perevodkassa.utils.resColor
+import com.perevod.perevodkassa.utils.roundAllCorners
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.onEach
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -26,7 +31,6 @@ class HomeFragment : BaseFragment(R.layout.screen_home) {
     }
 
     private var queryTextChangeListener: DebouncingQueryTextListener? = null
-    private var dialogSuccess: Dialog? = null
     private var dialogError: Dialog? = null
     private var dialogErrorTextView: MaterialTextView? = null
 
@@ -35,7 +39,6 @@ class HomeFragment : BaseFragment(R.layout.screen_home) {
 
     override fun prepareUi() {
         viewBinding.init()
-        initSuccessDialog()
         initErrorDialog()
         initButtonNext()
         initKeyboardButtons()
@@ -55,26 +58,14 @@ class HomeFragment : BaseFragment(R.layout.screen_home) {
         }.launchWhenStarted(lifecycleScope)
     }
 
-    private fun initSuccessDialog() {
-        val dialogView = layoutInflater.inflate(R.layout.screen_success, null)
-        dialogSuccess = Dialog(requireContext(), R.style.RoundedDialogStyle)
-            .apply {
-                setCancelable(false)
-                setContentView(dialogView)
-                create()
-            }
-    }
-
     private fun initErrorDialog() {
-        val dialogView = layoutInflater.inflate(R.layout.screen_error, null)
-        dialogError = Dialog(requireContext(), R.style.RoundedDialogStyle)
-            .apply {
-                setCancelable(false)
-                setContentView(dialogView)
-                create()
-            }
-
-        dialogErrorTextView = dialogView.findViewById(R.id.errorTextView)
+        val dialogView = layoutInflater.inflate(R.layout.screen_success, null)
+        dialogView.roundAllCorners(24)
+        dialogView.findViewById<AppCompatImageView>(R.id.successImageView).background = createCircleDrawable(
+            resColor(R.color.white_10)
+        )
+        dialogError = requireContext().dialogBuild(dialogView)
+        dialogErrorTextView = dialogView.findViewById(R.id.successTextView)
     }
 
     private fun initButtonNext() {
@@ -146,6 +137,7 @@ class HomeFragment : BaseFragment(R.layout.screen_home) {
             dialogError?.show()
             delay(2000)
             dialogError?.dismiss()
+            activity?.window?.hideSystemUI()
         }
     }
 
@@ -202,9 +194,7 @@ class HomeFragment : BaseFragment(R.layout.screen_home) {
     override fun onDestroyView() {
         queryTextChangeListener?.onDestroy()
         queryTextChangeListener = null
-        dialogSuccess?.dismiss()
         dialogError?.dismiss()
-        dialogSuccess = null
         dialogError = null
         dialogErrorTextView = null
         super.onDestroyView()

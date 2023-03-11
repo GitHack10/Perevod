@@ -15,5 +15,8 @@
     <string name="payment_success_screen_print">Распечатать чек</string>
     <string name="payment_success_screen_back">Назад</string>
     <string name="payment_success_screen_amount_title">Сумма для оплаты: %s₽</string>
-
+    <string name="payment_success_screen_order_status">Статус заказа:</string>
+    <string name="payment_success_screen_order_status_default">Ожидает оплаты</string>
+    <string name="payment_success_screen_message">Перевод прошел\nуспешно</string>
+    <string name="payment_error_screen_message">Ошибка.\nПовторите заново.</string>
 </resources>

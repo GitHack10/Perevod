@@ -2,13 +2,13 @@ package com.perevod.perevodkassa.presentation.screens.home
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.github.terrakok.cicerone.Router
+import com.perevod.perevodkassa.core.arch.BaseViewModel
+import com.perevod.perevodkassa.core.navigation.AppRouter
+import com.perevod.perevodkassa.core.navigation.Screens
 import com.perevod.perevodkassa.data.global.PreferenceStorage
 import com.perevod.perevodkassa.domain.PrintModel
 import com.perevod.perevodkassa.domain.use_case.ConnectCashierUseCase
 import com.perevod.perevodkassa.domain.use_case.InitCashierUseCase
-import com.perevod.perevodkassa.presentation.global.BaseViewModel
-import com.perevod.perevodkassa.presentation.global.navigation.Screens
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,7 +23,7 @@ class HomeViewModel(
     private val connectCashierUseCase: ConnectCashierUseCase,
     private val initCashierUseCase: InitCashierUseCase,
     private val prefs: PreferenceStorage,
-    private val router: Router,
+    private val router: AppRouter,
 ) : BaseViewModel() {
 
     private var printModel: PrintModel? = null

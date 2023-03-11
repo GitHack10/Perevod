@@ -3,12 +3,13 @@ package com.perevod.perevodkassa.domain.use_case
 import com.perevod.perevodkassa.data.repository.MainRepository
 import com.perevod.perevodkassa.domain.init_cashier.InitCashierRequest
 import com.perevod.perevodkassa.domain.init_cashier.Payload
+import com.perevod.perevodkassa.presentation.screens.home.HomeViewState
 
 class InitCashierUseCase(
     private val repository: MainRepository
 ) {
 
-    suspend operator fun invoke(input: Params) = repository.initCashier(
+    suspend operator fun invoke(input: Params): HomeViewState<Any> = repository.initCashier(
         InitCashierRequest(
             input.amount.toString(),
             input.currency,

@@ -1,40 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
-    android:orientation="vertical">
+    android:layout_gravity="center_horizontal"
+    android:maxWidth="@dimen/one_column_tablet_width">
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/successImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="32dp"
-        app:srcCompat="@drawable/ic_svg_error" />
-
-    <com.google.android.material.textview.MaterialTextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="32dp"
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="350dp"
+        android:background="@color/grey_1A1A1A"
         android:gravity="center"
-        android:text="@string/error_text"
-        android:textColor="#6B6B6B"
-        android:textSize="32sp"
-        android:textStyle="bold" />
+        android:orientation="vertical"
+        android:padding="32dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_max="@dimen/one_column_tablet_width">
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/errorTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="32dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="52dp"
-        android:gravity="center"
-        android:textColor="#6B6B6B"
-        android:textSize="32sp"
-        tools:text="Ошибка при выполнении транзакции" />
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/errorImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="32dp"
+            android:padding="48dp"
+            app:srcCompat="@drawable/ic_svg_error" />
 
-</LinearLayout>
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/errorTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:maxWidth="@dimen/one_column_tablet_width"
+            android:textColor="@color/red"
+            android:textSize="32sp"
+            tools:text="Ошибка. \nПовторите снова" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

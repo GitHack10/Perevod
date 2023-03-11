@@ -1,4 +1,4 @@
-package com.perevod.perevodkassa.presentation.global.navigation
+package com.perevod.perevodkassa.core.navigation
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity

@@ -26,6 +26,8 @@
     <color name="grey_7B7B7B">#7B7B7B</color>
     <color name="grey_BAB9B9">#BAB9B9</color>
     <color name="grey_333333">#333333</color>
+    <color name="grey_1A1A1A">#1A1A1A</color>
+    <color name="golden_tainoi">#FEC952</color>
 
     <array name="gradient_color">
         <item>#9054F6</item>

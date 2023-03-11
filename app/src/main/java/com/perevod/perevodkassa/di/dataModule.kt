@@ -8,7 +8,10 @@ import com.perevod.perevodkassa.data.global.PreferenceStorage
 import com.perevod.perevodkassa.data.global.SharedPreferenceStorage
 import com.perevod.perevodkassa.data.interceptors.AppRequestInterceptor
 import com.perevod.perevodkassa.data.interceptors.CacheInterceptor
+import com.perevod.perevodkassa.data.network.sse.SseService
+import com.perevod.perevodkassa.data.network.sse.SseServiceImpl
 import okhttp3.Cache
+import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext
@@ -56,6 +59,14 @@ val dataModule = module {
     }
 
     factory<ApiService> { get<Retrofit>().create(ApiService::class.java) }
+
+    factory<SseService> {
+        SseServiceImpl(
+            SSE_URL.toHttpUrl(),
+            get()
+        )
+    }
 }
 
 private const val BASE_URL = "https://api-stub.perevod.io:8443/api/v2/"
+private const val SSE_URL = "http://217.107.34.221:8777/events"
