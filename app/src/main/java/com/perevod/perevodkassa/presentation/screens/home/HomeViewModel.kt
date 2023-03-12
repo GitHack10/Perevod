@@ -154,6 +154,6 @@ class HomeViewModel(
     }
 
     private fun goToPaymentSuccessScreen(amount: Float) {
-        router.navigateTo(Screens.paymentSuccessScreen(amount))
+        router.replaceScreen(Screens.paymentSuccessScreen(amount))
     }
 }

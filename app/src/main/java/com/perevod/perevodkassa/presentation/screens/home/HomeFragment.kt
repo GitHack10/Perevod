@@ -37,6 +37,11 @@ class HomeFragment : BaseFragment(R.layout.screen_home) {
     private val viewBinding: ScreenHomeBinding by viewBinding()
     private val viewModel: HomeViewModel by viewModel()
 
+    override fun onResume() {
+        super.onResume()
+        activity?.window?.hideSystemUI()
+    }
+
     override fun prepareUi() {
         viewBinding.init()
         initErrorDialog()

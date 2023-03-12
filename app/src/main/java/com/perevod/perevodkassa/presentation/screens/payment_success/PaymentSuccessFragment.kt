@@ -67,6 +67,11 @@ class PaymentSuccessFragment : BaseFragment(R.layout.screen_payment_success) {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        activity?.window?.hideSystemUI()
+    }
+
     override fun prepareUi() {
         initService()
         initSuccessDialog()

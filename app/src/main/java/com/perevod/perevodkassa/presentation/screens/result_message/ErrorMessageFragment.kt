@@ -6,9 +6,11 @@ import com.perevod.perevodkassa.databinding.ScreenErrorMessageBinding
 import com.perevod.perevodkassa.core.arch.BaseFragment
 import com.perevod.perevodkassa.core.navigation.AppRouter
 import com.perevod.perevodkassa.core.navigation.Screens
+import com.perevod.perevodkassa.presentation.global.extensions.onDelayedClick
 import com.perevod.perevodkassa.utils.createCircleDrawable
 import com.perevod.perevodkassa.utils.createRoundedRippleDrawable
 import com.perevod.perevodkassa.utils.dpToPx
+import com.perevod.perevodkassa.utils.hideSystemUI
 import com.perevod.perevodkassa.utils.resColor
 import org.koin.android.ext.android.inject
 
@@ -22,6 +24,11 @@ class ErrorMessageFragment : BaseFragment(R.layout.screen_error_message) {
 
     private val viewBinding: ScreenErrorMessageBinding by viewBinding()
 
+    override fun onResume() {
+        super.onResume()
+        activity?.window?.hideSystemUI()
+    }
+
     override fun prepareUi() {
         with(viewBinding) {
             ivError.background = createCircleDrawable(resColor(R.color.white_10))
@@ -31,6 +38,9 @@ class ErrorMessageFragment : BaseFragment(R.layout.screen_error_message) {
                 24.dpToPx.toFloat(),
                 resColor(R.color.grey_4D4D4D)
             )
+            btnGoBack.onDelayedClick {
+                onBackPressed()
+            }
         }
     }
 
