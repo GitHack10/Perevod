@@ -64,13 +64,13 @@ class HomeFragment : BaseFragment(R.layout.screen_home) {
     }
 
     private fun initErrorDialog() {
-        val dialogView = layoutInflater.inflate(R.layout.screen_success, null)
+        val dialogView = layoutInflater.inflate(R.layout.screen_error, null)
         dialogView.roundAllCorners(24)
-        dialogView.findViewById<AppCompatImageView>(R.id.successImageView).background = createCircleDrawable(
+        dialogView.findViewById<AppCompatImageView>(R.id.errorImageView).background = createCircleDrawable(
             resColor(R.color.white_10)
         )
         dialogError = requireContext().dialogBuild(dialogView)
-        dialogErrorTextView = dialogView.findViewById(R.id.successTextView)
+        dialogErrorTextView = dialogView.findViewById(R.id.errorTextView)
     }
 
     private fun initButtonNext() {

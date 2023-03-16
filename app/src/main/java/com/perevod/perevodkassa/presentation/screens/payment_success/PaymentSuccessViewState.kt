@@ -16,7 +16,7 @@ sealed class PaymentSuccessViewState<out T : Any> {
 
     data class OnUpdatePaymentStatus(val paymentEvent: PaymentStatusEvent) : PaymentSuccessViewState<Unit>()
 
-    data class PaymentSuccess(val message: String) : PaymentSuccessViewState<Unit>()
+    data class PaymentSuccess(val message: String, val paperPrint: String?) : PaymentSuccessViewState<Unit>()
     data class PaymentError(val message: String) : PaymentSuccessViewState<Unit>()
 
     data class Error(val message: String) : PaymentSuccessViewState<ErrorModel>()

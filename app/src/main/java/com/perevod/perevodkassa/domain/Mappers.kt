@@ -7,5 +7,6 @@ import com.perevod.perevodkassa.data.network.sse.PaymentStatusResponseObj
 fun PaymentStatusResponseObj.mapToPaymentStatusEvent() = PaymentStatusEvent(
     orderUuid,
     message,
-    PaymentStatus.getStatusByValue(status)
+    PaymentStatus.getStatusByValue(status),
+    paperPrint
 )

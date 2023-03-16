@@ -7,8 +7,9 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="gradient_start">#9054F6</color>
-    <color name="gradient_end">#14E487</color>
+    <color name="golden_tainoi">#FEC952</color>
+    <color name="cornflowerBlue">#9054F6</color>
+    <color name="malachite">#14E487</color>
 
     <color name="colorPrimary">#FFFFFF</color>
     <color name="colorPrimaryDark">#009966</color>
@@ -27,11 +28,13 @@
     <color name="grey_BAB9B9">#BAB9B9</color>
     <color name="grey_333333">#333333</color>
     <color name="grey_1A1A1A">#1A1A1A</color>
-    <color name="golden_tainoi">#FEC952</color>
+
+    <color name="gradient_start">@color/cornflowerBlue</color>
+    <color name="gradient_end">@color/malachite</color>
 
     <array name="gradient_color">
-        <item>#9054F6</item>
-        <item>#14E487</item>
+        <item>@color/gradient_start</item>
+        <item>@color/gradient_end</item>
     </array>
 
     <color name="white_67">#ABFFFFFF</color>

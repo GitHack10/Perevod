@@ -29,13 +29,13 @@
     <LinearLayout
         android:id="@+id/llInputAmount"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
         android:layout_marginHorizontal="32dp"
         android:layout_marginTop="24dp"
         android:background="@drawable/background_rounded_stroke_24"
         android:orientation="horizontal"
         android:paddingHorizontal="12dp"
-        android:paddingVertical="16dp"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
@@ -45,12 +45,12 @@
         <EditText
             android:id="@+id/etAmount"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginStart="12dp"
             android:layout_weight="1"
             android:background="@null"
             android:digits="0123456789."
-            android:gravity="start"
+            android:gravity="start|center"
             android:hint="@string/home_screen_input_hint"
             android:inputType="numberDecimal"
             android:maxLength="12"
@@ -75,7 +75,7 @@
         android:id="@+id/btnNext"
         style="@style/PrimaryButtonStyle"
         android:layout_width="0dp"
-        android:layout_height="90dp"
+        android:layout_height="100dp"
         android:layout_marginHorizontal="32dp"
         android:layout_marginTop="24dp"
         android:background="@drawable/transition_btn_primary"
@@ -84,7 +84,6 @@
         android:text="@string/home_screen_btn_next"
         android:textSize="24sp"
         app:backgroundTint="@null"
-        app:layout_constraintBottom_toTopOf="@+id/glKeyboard"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/llInputAmount"
@@ -278,6 +277,15 @@
         <!-- endregion row 4 -->
 
     </GridLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:alpha=".5"
+        android:scaleType="fitXY"
+        android:src="@drawable/background_keyboard"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="@id/glKeyboard" />
 
     <FrameLayout
         android:id="@+id/vLoading"

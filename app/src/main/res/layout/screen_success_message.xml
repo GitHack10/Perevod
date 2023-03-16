@@ -7,34 +7,34 @@
     android:background="@color/black">
 
     <include
-        android:id="@+id/errorMessageToolbar"
+        android:id="@+id/successMessageToolbar"
         layout="@layout/toolbar_main" />
 
-    <ImageView
-        android:id="@+id/ivSuccess"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="40dp"
-        app:layout_constraintBottom_toTopOf="@+id/btnGoBack"
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/ivSuccessAnimation"
+        android:layout_width="125dp"
+        android:layout_height="125dp"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintBottom_toTopOf="@id/tvSuccess"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/errorMessageToolbar"
-        app:srcCompat="@drawable/ic_svg_success"
-        tools:background="@color/white_10" />
+        app:layout_constraintTop_toBottomOf="@+id/successMessageToolbar"
+        tools:src="@drawable/ic_svg_success" />
 
     <TextView
         android:id="@+id/tvSuccess"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:layout_marginHorizontal="32dp"
+        android:layout_marginVertical="20dp"
         android:gravity="center"
         android:text="@string/payment_success_screen_message"
         android:textColor="@color/green"
         android:textSize="32sp"
+        app:layout_constraintBottom_toTopOf="@+id/btnGoBack"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ivSuccess"
+        app:layout_constraintTop_toBottomOf="@+id/ivSuccessAnimation"
         app:layout_constraintWidth_max="@dimen/one_column_tablet_width" />
 
     <com.google.android.material.button.MaterialButton
@@ -44,7 +44,7 @@
         android:layout_height="100dp"
         android:layout_marginHorizontal="32dp"
         android:layout_marginBottom="56dp"
-        android:text="@string/payment_success_screen_back"
+        android:text="@string/payment_screen_back"
         android:textColor="@color/white"
         android:textSize="20sp"
         app:backgroundTint="@null"
@@ -53,26 +53,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintWidth_max="@dimen/one_column_tablet_width"
         tools:background="@drawable/bg_rounded_24_grey" />
-
-    <FrameLayout
-        android:id="@+id/vLoading"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="@color/black_60"
-        android:clickable="true"
-        android:elevation="6dp"
-        android:focusable="true"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/errorMessageToolbar"
-        tools:visibility="gone">
-
-        <ProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:indeterminateTint="@color/white" />
-
-    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

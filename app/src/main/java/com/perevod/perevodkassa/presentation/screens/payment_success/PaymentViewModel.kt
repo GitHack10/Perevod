@@ -1,7 +1,6 @@
 package com.perevod.perevodkassa.presentation.screens.payment_success
 
 import android.graphics.Bitmap
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.google.gson.GsonBuilder
 import com.google.zxing.BarcodeFormat
@@ -45,7 +44,7 @@ import java.util.concurrent.atomic.AtomicReference
 private const val TAG = "PaymentEvents"
 private const val SSE_URL = "http://217.107.34.221:8777/events"
 
-class PaymentSuccessViewModel(
+class PaymentViewModel(
     private val getPrintDataUseCase: GetPrintDataUseCase,
     private val subscribeToPaymentEventsUseCase: SubscribeToPaymentEventsUseCase,
     private val prefs: PreferenceStorage,
@@ -55,7 +54,7 @@ class PaymentSuccessViewModel(
     private val _viewState = MutableStateFlow<PaymentSuccessViewState<Any>>(PaymentSuccessViewState.Idle)
     val viewState: StateFlow<PaymentSuccessViewState<Any>> = _viewState
 
-    val userIntent = MutableSharedFlow<PaymentSuccessIntent>(
+    val userIntent = MutableSharedFlow<PaymentIntent>(
         replay = 1,
         onBufferOverflow = BufferOverflow.DROP_OLDEST
     )
@@ -76,7 +75,7 @@ class PaymentSuccessViewModel(
 
     override fun onAttach() {
         handleIntents()
-        userIntent.tryEmit(PaymentSuccessIntent.ShowQrCode)
+        userIntent.tryEmit(PaymentIntent.ShowQrCode)
     }
 
     override fun onBackPressed() {
@@ -87,32 +86,12 @@ class PaymentSuccessViewModel(
 
         userIntent.onEach { intent ->
             when (intent) {
-                is PaymentSuccessIntent.PrintReceipt -> printReceipt()
-                is PaymentSuccessIntent.ShowQrCode -> showQrCode()
-                is PaymentSuccessIntent.OnBackPressed -> onBackPressed()
-                is PaymentSuccessIntent.ShowErrorScreen -> showErrorScreen(intent.message)
-                is PaymentSuccessIntent.ShowSuccessScreen -> showSuccessScreen(intent.message)
+                is PaymentIntent.ShowQrCode -> showQrCode()
+                is PaymentIntent.OnBackPressed -> onBackPressed()
+                is PaymentIntent.ShowErrorScreen -> showErrorScreen(intent.message)
+                is PaymentIntent.ShowSuccessScreen -> showSuccessScreen(intent.message, intent.paperPrint)
             }
         }.launchIn(viewModelScope)
-    }
-
-    private fun printReceipt() {
-        _viewState.value = PaymentSuccessViewState.ShowLoading
-        viewModelScope.launch {
-            when (val result = getPrintDataUseCase(
-                GetPrintDataUseCase.Params(
-                    PrintType.Print,
-                    prefs.lastOrderUuid ?: ""
-                )
-            )) {
-                is PaymentSuccessViewState.SuccessPrintOrShowQr -> {
-                    _viewState.value = PaymentSuccessViewState.SuccessPrintOrShowQr(result.printModel)
-                }
-                else -> _viewState.value = result
-            }
-        }.invokeOnCompletion {
-            _viewState.value = PaymentSuccessViewState.HideLoading
-        }
     }
 
     private fun showQrCode() {
@@ -152,7 +131,6 @@ class PaymentSuccessViewModel(
                         is PaymentSuccessViewState.OnUpdatePaymentStatus -> onUpdatePaymentStatus(it)
                         else -> _viewState.value = it
                     }
-                    Log.d("TEST", it::class.java.simpleName)
                 }
         }
     }
@@ -183,15 +161,22 @@ class PaymentSuccessViewModel(
                         data, PaymentStatusResponseObj::class.java
                     )
                     val paymentEvent = paymentResponse.mapToPaymentStatusEvent()
-                    if (paymentEvent.status == PaymentStatus.Validated) {
-                        _viewState.value = PaymentSuccessViewState.PaymentSuccess(paymentEvent.message)
-                    } else {
-                        _viewState.value = PaymentSuccessViewState.OnUpdatePaymentStatus(paymentEvent)
+                    when (paymentEvent.status) {
+                        PaymentStatus.CryptoInit -> {
+                            _viewState.value = PaymentSuccessViewState.OnUpdatePaymentStatus(paymentEvent)
+                        }
+                        PaymentStatus.Validated -> {
+                            _viewState.value = PaymentSuccessViewState.PaymentSuccess(
+                                paymentEvent.message,
+                                paymentEvent.paperPrint
+                            )
+                        }
+                        else -> Unit
                     }
                 } catch (e: Exception) {
                     Timber.tag(TAG).d("On Event Received! Data -: ${e.message}")
                     _viewState.value = PaymentSuccessViewState.PaymentError(
-                        "Ошибка.\n" + "Повторите заново."
+                        "Ошибка.\n" + "Повторите снова."
                     )
                 }
             }
@@ -252,7 +237,10 @@ class PaymentSuccessViewModel(
         }
         when (status) {
             PaymentStatus.Validated -> {
-                _viewState.value = PaymentSuccessViewState.PaymentSuccess(paymentEvent.message)
+                _viewState.value = PaymentSuccessViewState.PaymentSuccess(
+                    paymentEvent.message,
+                    paymentEvent.paperPrint
+                )
             }
             else -> {
                 _viewState.value = viewState
@@ -264,7 +252,7 @@ class PaymentSuccessViewModel(
         router.replaceScreen(Screens.errorMessageScreen(message))
     }
 
-    private fun showSuccessScreen(message: String) {
-        router.replaceScreen(Screens.successMessageScreen(message))
+    private fun showSuccessScreen(message: String, paperPrint: String?) {
+        router.replaceScreen(Screens.paymentSuccessScreen(message, paperPrint))
     }
 }

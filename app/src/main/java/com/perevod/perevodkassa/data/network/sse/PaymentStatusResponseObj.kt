@@ -4,4 +4,5 @@ class PaymentStatusResponseObj(
     val orderUuid: String,
     val status: String,
     val message: String,
+    val paperPrint: String?,
 )

@@ -44,7 +44,7 @@
         android:layout_height="100dp"
         android:layout_marginHorizontal="32dp"
         android:layout_marginBottom="56dp"
-        android:text="@string/payment_success_screen_back"
+        android:text="@string/payment_screen_back"
         android:textColor="@color/white"
         android:textSize="20sp"
         app:backgroundTint="@null"

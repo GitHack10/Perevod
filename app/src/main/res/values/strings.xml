@@ -12,11 +12,11 @@
     <string name="home_screen_input_hint">0</string>
     <string name="home_screen_btn_next">Продолжить</string>
 
-    <string name="payment_success_screen_print">Распечатать чек</string>
-    <string name="payment_success_screen_back">Назад</string>
-    <string name="payment_success_screen_amount_title">Сумма для оплаты: %s₽</string>
-    <string name="payment_success_screen_order_status">Статус оплаты:</string>
-    <string name="payment_success_screen_order_status_default">Ожидает оплаты</string>
-    <string name="payment_success_screen_message">Перевод прошел\nуспешно</string>
+    <string name="payment_screen_print">Распечатать чек</string>
+    <string name="payment_screen_back">Назад</string>
+    <string name="payment_screen_amount_title">Сумма для оплаты: %s₽</string>
+    <string name="payment_screen_order_status">Статус оплаты:</string>
+    <string name="payment_screen_order_status_default">Ожидает оплаты</string>
+    <string name="payment_success_screen_message">Спасибо!\nОплата прошла успешно</string>
     <string name="payment_error_screen_message">Ошибка.\nПовторите заново.</string>
 </resources>

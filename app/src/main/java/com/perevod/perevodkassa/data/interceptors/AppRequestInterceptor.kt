@@ -20,6 +20,10 @@ object AppRequestInterceptor : Interceptor, KoinComponent {
         val originalRequest = chain.request()
         val originalUrl = originalRequest.url
 
+        if (prefs.sdkKey.isNullOrBlank()) {
+            return chain.proceed(originalRequest)
+        }
+
         if (originalUrl.pathSegments.contains("connect")) {
             return chain.proceed(originalRequest)
         }

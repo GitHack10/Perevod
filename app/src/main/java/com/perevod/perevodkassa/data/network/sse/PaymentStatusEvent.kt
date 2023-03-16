@@ -4,6 +4,7 @@ data class PaymentStatusEvent(
     val orderUuid: String,
     val message: String,
     val status: PaymentStatus,
+    val paperPrint: String?
 )
 
 /**

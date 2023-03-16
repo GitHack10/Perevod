@@ -131,6 +131,30 @@ class HomeViewModel(
     }
 
     private fun onButtonDoneClicked() {
+        router.replaceScreen(
+            Screens.paymentSuccessScreen(
+                "Спасибо!\nОплата прошла успешно.",
+                """
+                    {
+                      "type": "nonFiscal",
+                      "items": [
+                        {
+                          "type": "text",
+                          "text": "perevod.io",
+                          "alignment": "center"
+                        },
+                        {
+                          "type": "barcode",
+                          "barcode": "https://www.youtube.com/shorts/PYNwsYudkSg",
+                          "barcodeType": "QR",
+                          "scale": 100
+                        }
+                      ]
+                    }
+                """.trimIndent()
+            )
+        )
+        return
         _viewState.value = HomeViewState.ShowLoading
         viewModelScope.launch {
             when (val result = initCashierUseCase(InitCashierUseCase.Params(currentAmount))) {
@@ -154,6 +178,6 @@ class HomeViewModel(
     }
 
     private fun goToPaymentSuccessScreen(amount: Float) {
-        router.replaceScreen(Screens.paymentSuccessScreen(amount))
+        router.replaceScreen(Screens.paymentScreen(amount))
     }
 }
