@@ -18,6 +18,11 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="Theme.PerevodKassa.Launcher">
+        <item name="android:windowBackground">@drawable/splash_screen</item>
+        <item name="android:statusBarColor">@color/black_40</item>
+    </style>
+
     <!-- region EditText Styles -->
     <style name="Widget.App.EditText.Gray" parent="Widget.AppCompat.EditText">
         <item name="android:textColor">@color/white</item>

@@ -37,7 +37,9 @@ class CommonAlertScreen(
     }
 
     override fun createFragment(factory: FragmentFactory): Fragment =
-        CommonAlertDialog().withArguments(ARG_PARAMS to params)
+        CommonAlertDialog().withArguments {
+            putParcelable(ARG_PARAMS, params)
+        }
 }
 
 sealed class CommonAlertResult : Parcelable {

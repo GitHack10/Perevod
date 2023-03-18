@@ -15,17 +15,21 @@ object Screens {
     fun homeScreen() = FragmentScreen { HomeFragment() }
 
     fun paymentScreen(amount: Float) = FragmentScreen {
-        PaymentFragment().withArguments(PaymentFragment.EXTRA_AMOUNT to amount)
+        PaymentFragment().withArguments {
+            putFloat(PaymentFragment.EXTRA_AMOUNT, amount)
+        }
     }
 
     fun errorMessageScreen(message: String) = FragmentScreen {
-        ErrorMessageFragment() .withArguments(ErrorMessageFragment.EXTRA_MESSAGE_ERROR to message)
+        ErrorMessageFragment().withArguments {
+            putString(ErrorMessageFragment.EXTRA_MESSAGE_ERROR, message)
+        }
     }
 
     fun paymentSuccessScreen(message: String, paperPrint: String?) = FragmentScreen {
-        PaymentSuccessFragment() .withArguments(
-            PaymentSuccessFragment.EXTRA_MESSAGE_SUCCESS to message,
-            PaymentSuccessFragment.EXTRA_PAPER_PRINT to paperPrint
-        )
+        PaymentSuccessFragment().withArguments {
+            putString(PaymentSuccessFragment.EXTRA_MESSAGE_SUCCESS, message)
+            putString(PaymentSuccessFragment.EXTRA_PAPER_PRINT, paperPrint)
+        }
     }
 }

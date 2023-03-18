@@ -1,9 +1,9 @@
 package com.perevod.perevodkassa.utils
 
 import android.content.Context
+import android.os.Bundle
 import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 
 fun Fragment.resColor(@ColorRes color: Int): Int =
@@ -12,7 +12,8 @@ fun Fragment.resColor(@ColorRes color: Int): Int =
 fun Context.resColor(@ColorRes color: Int): Int =
     ContextCompat.getColor(this, color)
 
-fun <T : Fragment> T.withArguments(vararg params: Pair<String, Any?>): T {
-    arguments = bundleOf(*params)
-    return this
+inline fun Fragment.withArguments(crossinline builder: Bundle.() -> Unit): Fragment = also {
+    arguments = Bundle().apply {
+        builder()
+    }
 }

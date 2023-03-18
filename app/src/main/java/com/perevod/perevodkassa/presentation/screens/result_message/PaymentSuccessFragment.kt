@@ -6,13 +6,12 @@ import android.content.ServiceConnection
 import android.os.IBinder
 import android.os.RemoteException
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.perevod.perevodkassa.R
-import com.perevod.perevodkassa.databinding.ScreenSuccessMessageBinding
 import com.perevod.perevodkassa.core.arch.BaseFragment
 import com.perevod.perevodkassa.core.navigation.AppRouter
 import com.perevod.perevodkassa.core.navigation.Screens
+import com.perevod.perevodkassa.databinding.ScreenSuccessMessageBinding
 import com.perevod.perevodkassa.presentation.global.extensions.onDelayedClick
 import com.perevod.perevodkassa.utils.createCircleDrawable
 import com.perevod.perevodkassa.utils.createRoundedRippleDrawable
@@ -22,6 +21,7 @@ import com.perevod.perevodkassa.utils.resColor
 import org.koin.android.ext.android.inject
 import ru.atol.drivers10.service.IFptrService
 import timber.log.Timber
+import java.util.concurrent.atomic.AtomicBoolean
 
 class PaymentSuccessFragment : BaseFragment(R.layout.screen_success_message) {
 
@@ -31,6 +31,7 @@ class PaymentSuccessFragment : BaseFragment(R.layout.screen_success_message) {
     }
 
     private var fptrServiceBinder: IFptrService? = null
+    private var needPrint: AtomicBoolean = AtomicBoolean(true)
 
     private val viewBinding: ScreenSuccessMessageBinding by viewBinding()
     private val router: AppRouter by inject()
@@ -48,6 +49,9 @@ class PaymentSuccessFragment : BaseFragment(R.layout.screen_success_message) {
 
         override fun onServiceConnected(name: ComponentName, service: IBinder) {
             fptrServiceBinder = IFptrService.Stub.asInterface(service)
+            if (needPrint.getAndSet(false)) {
+                printSlip(paperPrint)
+            }
         }
     }
 
@@ -66,7 +70,6 @@ class PaymentSuccessFragment : BaseFragment(R.layout.screen_success_message) {
 
     override fun prepareUi() {
         initService()
-        printSlip(paperPrint)
         with(viewBinding) {
             ivSuccessAnimation.background = createCircleDrawable(resColor(R.color.white_10))
             ivSuccessAnimation.setAnimation(R.raw.payment_success_anim)
@@ -98,13 +101,11 @@ class PaymentSuccessFragment : BaseFragment(R.layout.screen_success_message) {
     }
 
     private fun printSlip(paperPrint: String?) {
-        lifecycleScope.launchWhenStarted {
-            try {
-                val resultOpen = fptrServiceBinder?.processJson(paperPrint)
-                Timber.tag("PRINT_RESULT").e(resultOpen)
-            } catch (e: RemoteException) {
-                e.printStackTrace()
-            }
+        try {
+            val resultOpen = fptrServiceBinder?.processJson(paperPrint)
+            Timber.tag("PRINT_RESULT").e(resultOpen)
+        } catch (e: RemoteException) {
+            e.printStackTrace()
         }
     }
 
