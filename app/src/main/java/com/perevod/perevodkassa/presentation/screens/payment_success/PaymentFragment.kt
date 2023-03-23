@@ -52,14 +52,14 @@ class PaymentFragment : BaseFragment(R.layout.screen_payment_success) {
     override fun setupViewModel() {
         viewModel.viewState.onEach { viewState ->
             when (viewState) {
-                is PaymentSuccessViewState.Idle -> Unit
-                is PaymentSuccessViewState.ShowLoading -> showLoading()
-                is PaymentSuccessViewState.HideLoading -> hideLoading()
-                is PaymentSuccessViewState.Error -> showError(viewState.message)
-                is PaymentSuccessViewState.PaymentError -> showPaymentError(viewState.message)
-                is PaymentSuccessViewState.PaymentSuccess -> showPaymentSuccess(viewState.message, viewState.paperPrint)
-                is PaymentSuccessViewState.ShowQrCode -> showQrCode(viewState.qrBitmap)
-                is PaymentSuccessViewState.OnUpdatePaymentStatus -> onUpdatePaymentStatus(viewState.paymentEvent.message)
+                is PaymentViewState.Idle -> Unit
+                is PaymentViewState.ShowLoading -> showLoading()
+                is PaymentViewState.HideLoading -> hideLoading()
+                is PaymentViewState.Error -> showError(viewState.message)
+                is PaymentViewState.PaymentError -> showPaymentError(viewState.message)
+                is PaymentViewState.PaymentSuccess -> showPaymentSuccess(viewState.message, viewState.paperPrint)
+                is PaymentViewState.ShowQrCode -> showQrCode(viewState.qrBitmap)
+                is PaymentViewState.OnUpdatePaymentStatus -> onUpdatePaymentStatus(viewState.paymentEvent.message)
                 else -> Unit
             }
         }.launchWhenStarted(lifecycleScope)

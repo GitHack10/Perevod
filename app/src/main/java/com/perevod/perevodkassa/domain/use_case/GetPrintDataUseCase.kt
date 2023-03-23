@@ -1,13 +1,13 @@
 package com.perevod.perevodkassa.domain.use_case
 
 import com.perevod.perevodkassa.data.repository.MainRepository
-import com.perevod.perevodkassa.presentation.screens.payment_success.PaymentSuccessViewState
+import com.perevod.perevodkassa.presentation.screens.payment_success.PaymentViewState
 
 class GetPrintDataUseCase(
     private val repository: MainRepository
 ) {
 
-    suspend operator fun invoke(input: Params): PaymentSuccessViewState<Any> =
+    suspend operator fun invoke(input: Params): PaymentViewState<Any> =
         repository.printOrShowQr(
             input.printType,
             input.orderUuid,

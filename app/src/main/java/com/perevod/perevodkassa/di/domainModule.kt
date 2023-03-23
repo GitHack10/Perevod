@@ -30,7 +30,7 @@ val domainModule = module {
 
     factory<MainRepository> {
         HomeRepositoryImpl(
-            get(), get()
+            get(),
         )
     }
 

@@ -1,9 +1,12 @@
 package com.perevod.perevodkassa.data.network.sse
 
-import com.perevod.perevodkassa.presentation.screens.payment_success.PaymentSuccessViewState
-import kotlinx.coroutines.flow.Flow
+import okhttp3.Callback
+import okhttp3.sse.EventSourceListener
 
 interface SseService {
 
-    suspend fun subscribeToEvents(): Flow<PaymentSuccessViewState<Any>>
+    suspend fun subscribeToEvents(
+        eventSourceListener: EventSourceListener,
+        responseCallback: Callback
+    )
 }

@@ -4,8 +4,7 @@ import com.perevod.perevodkassa.domain.connect_cashier.ConnectCashierRequest
 import com.perevod.perevodkassa.domain.init_cashier.InitCashierRequest
 import com.perevod.perevodkassa.domain.use_case.PrintType
 import com.perevod.perevodkassa.presentation.screens.home.HomeViewState
-import com.perevod.perevodkassa.presentation.screens.payment_success.PaymentSuccessViewState
-import kotlinx.coroutines.flow.Flow
+import com.perevod.perevodkassa.presentation.screens.payment_success.PaymentViewState
 
 interface MainRepository {
 
@@ -14,7 +13,5 @@ interface MainRepository {
     suspend fun printOrShowQr(
         printType: PrintType,
         orderUuid: String,
-    ): PaymentSuccessViewState<Any>
-
-    suspend fun subscribeToPaymentEvents(): Flow<PaymentSuccessViewState<Any>>
+    ): PaymentViewState<Any>
 }

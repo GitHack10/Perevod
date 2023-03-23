@@ -1,13 +1,20 @@
 package com.perevod.perevodkassa.domain.use_case
 
-import com.perevod.perevodkassa.data.repository.MainRepository
-import com.perevod.perevodkassa.presentation.screens.payment_success.PaymentSuccessViewState
-import kotlinx.coroutines.flow.Flow
+import com.perevod.perevodkassa.data.network.sse.SseService
+import okhttp3.Callback
+import okhttp3.sse.EventSourceListener
 
 class SubscribeToPaymentEventsUseCase(
-    private val repository: MainRepository,
+    private val sseService: SseService,
 ) {
 
-    suspend operator fun invoke(): Flow<PaymentSuccessViewState<Any>> =
-        repository.subscribeToPaymentEvents()
+    suspend operator fun invoke(
+        eventSourceListener: EventSourceListener,
+        responseCallback: Callback
+    ) {
+        sseService.subscribeToEvents(
+            eventSourceListener,
+            responseCallback
+        )
+    }
 }
