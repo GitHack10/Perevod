@@ -51,7 +51,7 @@ val dataModule = module {
             .create()
 
         Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(BASE_URL_DEV)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .addCallAdapterFactory(CoroutineCallAdapterFactory())
             .client(okHttpClient)
@@ -62,11 +62,13 @@ val dataModule = module {
 
     factory<SseService> {
         SseServiceImpl(
-            SSE_URL.toHttpUrl(),
+            SSE_URL_DEV.toHttpUrl(),
             get()
         )
     }
 }
 
-private const val BASE_URL = "https://api-stub.perevod.io:8443/api/v2/"
-private const val SSE_URL = "http://217.107.34.221:8777/events"
+private const val BASE_URL_DEV = "https://api-dev.perevod.io/api/v2/"
+private const val BASE_URL_PROD = "https://api-prod.perevod.io/api/v2/"
+private const val SSE_URL_DEV = "http://streamer-dev.perevod.io/events"
+private const val SSE_URL_PROD = "http://streamer-prod.perevod.io/events"

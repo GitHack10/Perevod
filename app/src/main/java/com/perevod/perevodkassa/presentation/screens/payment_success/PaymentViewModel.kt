@@ -116,6 +116,9 @@ class PaymentViewModel(
             override fun onClosed(eventSource: EventSource) {
                 super.onClosed(eventSource)
                 Timber.tag(TAG).d("Connection Closed")
+                _viewState.value = PaymentViewState.PaymentError(
+                    parseError()
+                )
             }
             override fun onEvent(
                 eventSource: EventSource,
@@ -144,7 +147,7 @@ class PaymentViewModel(
                 } catch (e: Exception) {
                     Timber.tag(TAG).d("On Event Received! Data -: ${e.message}")
                     _viewState.value = PaymentViewState.PaymentError(
-                        "Ошибка.\n" + "Повторите снова."
+                        parseError()
                     )
                 }
             }
@@ -152,7 +155,7 @@ class PaymentViewModel(
                 super.onFailure(eventSource, t, response)
                 Timber.tag(TAG).d("On Failure -: ${response?.message}")
                 _viewState.value = PaymentViewState.PaymentError(
-                    response?.message ?: ("Ошибка.\n" + "Повторите снова.")
+                    parseError(response?.message)
                 )
             }
         }
@@ -160,7 +163,7 @@ class PaymentViewModel(
             override fun onFailure(call: Call, e: IOException) {
                 Timber.tag(TAG).d("API Call Failure: %s", e.localizedMessage)
                 _viewState.value = PaymentViewState.PaymentError(
-                    e.localizedMessage ?: ("Ошибка.\n" + "Повторите снова.")
+                    parseError(e.localizedMessage)
                 )
             }
             override fun onResponse(call: Call, response: Response) {
@@ -183,4 +186,7 @@ class PaymentViewModel(
     private fun showSuccessScreen(message: String, paperPrint: String?) {
         router.replaceScreen(Screens.paymentSuccessScreen(message, paperPrint))
     }
+
+    private fun parseError(message: String? = null): String =
+        message?.ifBlank { "Ошибка.\n" + "Повторите снова." } ?: ("Ошибка.\n" + "Повторите снова.")
 }
